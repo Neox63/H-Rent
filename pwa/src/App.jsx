@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Annonces from "./pages/annonces";
+import CreateAnnonce from "./pages/annonces/create-annonce";
 import Annonce from "./pages/annonces/[id]";
 import Home from "./pages/home";
 import Page404 from "./pages/page-404";
@@ -12,6 +13,7 @@ const App = () => {
         <Route exact path="/" component={Home} />
         <Route exact path="/annonces" component={Annonces} />
         <Route exact path="/annonce/:id" component={Annonce} />
+        <Route exact path="/annonce/create" component={CreateAnnonce} />
         <Route exact path="/profil" component={Profil} />
         <Route component={Page404} />
       </Switch>
