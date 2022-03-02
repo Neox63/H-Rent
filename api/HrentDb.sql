@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost:8889
--- Généré le :  ven. 03 déc. 2021 à 14:57
+-- Généré le :  ven. 03 déc. 2021 à 15:48
 -- Version du serveur :  5.7.26
 -- Version de PHP :  7.3.8
 
@@ -38,9 +38,16 @@ CREATE TABLE `Annonce` (
 
 CREATE TABLE `Document` (
   `idDocument` int(11) NOT NULL,
-  `idUser` int(11) NOT NULL,
+  `idTypeDocument` int(11) NOT NULL,
   `cheminDocument` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `Document`
+--
+
+INSERT INTO `Document` (`idDocument`, `idTypeDocument`, `cheminDocument`) VALUES
+(1, 1, 'bo');
 
 -- --------------------------------------------------------
 
@@ -56,10 +63,10 @@ CREATE TABLE `Image` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `Reservations`
+-- Structure de la table `Reservation`
 --
 
-CREATE TABLE `Reservations` (
+CREATE TABLE `Reservation` (
   `idReservation` int(11) NOT NULL,
   `dateDebut` datetime NOT NULL,
   `dateFin` datetime NOT NULL,
@@ -74,9 +81,18 @@ CREATE TABLE `Reservations` (
 --
 
 CREATE TABLE `TypeDocument` (
-  `typeDocument` varchar(40) NOT NULL,
-  `idDocument` int(11) NOT NULL
+  `idTypeDocument` int(11) NOT NULL,
+  `libelle` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Déchargement des données de la table `TypeDocument`
+--
+
+INSERT INTO `TypeDocument` (`idTypeDocument`, `libelle`) VALUES
+(1, 'Carte d\'identité'),
+(2, 'Passeport'),
+(3, 'Justificatif de domicile');
 
 -- --------------------------------------------------------
 
@@ -88,6 +104,17 @@ CREATE TABLE `Utilisateur` (
   `id` int(11) NOT NULL,
   `nom` varchar(60) NOT NULL,
   `prenom` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `Utilisateur_Document`
+--
+
+CREATE TABLE `Utilisateur_Document` (
+  `idUser` int(11) NOT NULL,
+  `idDocument` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -107,7 +134,7 @@ ALTER TABLE `Annonce`
 --
 ALTER TABLE `Document`
   ADD PRIMARY KEY (`idDocument`),
-  ADD KEY `idUser` (`idUser`);
+  ADD KEY `idUser` (`idTypeDocument`);
 
 --
 -- Index pour la table `Image`
@@ -116,9 +143,9 @@ ALTER TABLE `Image`
   ADD PRIMARY KEY (`idImage`);
 
 --
--- Index pour la table `Reservations`
+-- Index pour la table `Reservation`
 --
-ALTER TABLE `Reservations`
+ALTER TABLE `Reservation`
   ADD PRIMARY KEY (`idReservation`),
   ADD KEY `idClient` (`idClient`),
   ADD KEY `idAnnonce` (`idAnnonce`);
@@ -127,14 +154,20 @@ ALTER TABLE `Reservations`
 -- Index pour la table `TypeDocument`
 --
 ALTER TABLE `TypeDocument`
-  ADD PRIMARY KEY (`typeDocument`),
-  ADD KEY `idDocument` (`idDocument`);
+  ADD PRIMARY KEY (`idTypeDocument`);
 
 --
 -- Index pour la table `Utilisateur`
 --
 ALTER TABLE `Utilisateur`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `Utilisateur_Document`
+--
+ALTER TABLE `Utilisateur_Document`
+  ADD PRIMARY KEY (`idUser`,`idDocument`),
+  ADD KEY `idDocument` (`idDocument`);
 
 --
 -- Contraintes pour les tables déchargées
@@ -151,17 +184,18 @@ ALTER TABLE `Annonce`
 -- Contraintes pour la table `Document`
 --
 ALTER TABLE `Document`
-  ADD CONSTRAINT `document_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `Utilisateur` (`id`);
+  ADD CONSTRAINT `document_ibfk_1` FOREIGN KEY (`idTypeDocument`) REFERENCES `TypeDocument` (`idTypeDocument`);
 
 --
--- Contraintes pour la table `Reservations`
+-- Contraintes pour la table `Reservation`
 --
-ALTER TABLE `Reservations`
-  ADD CONSTRAINT `reservations_ibfk_1` FOREIGN KEY (`idClient`) REFERENCES `Utilisateur` (`id`),
-  ADD CONSTRAINT `reservations_ibfk_2` FOREIGN KEY (`idAnnonce`) REFERENCES `Annonce` (`idAnnonce`);
+ALTER TABLE `Reservation`
+  ADD CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`idClient`) REFERENCES `Utilisateur` (`id`),
+  ADD CONSTRAINT `reservation_ibfk_2` FOREIGN KEY (`idAnnonce`) REFERENCES `Annonce` (`idAnnonce`);
 
 --
--- Contraintes pour la table `TypeDocument`
+-- Contraintes pour la table `Utilisateur_Document`
 --
-ALTER TABLE `TypeDocument`
-  ADD CONSTRAINT `typedocument_ibfk_1` FOREIGN KEY (`idDocument`) REFERENCES `Document` (`idDocument`);
+ALTER TABLE `Utilisateur_Document`
+  ADD CONSTRAINT `utilisateur_document_ibfk_1` FOREIGN KEY (`idUser`) REFERENCES `Utilisateur` (`id`),
+  ADD CONSTRAINT `utilisateur_document_ibfk_2` FOREIGN KEY (`idDocument`) REFERENCES `Document` (`idDocument`);
