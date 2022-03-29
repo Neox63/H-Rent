@@ -50,10 +50,7 @@ const users = [
 
 const userFavoriteAnnonces = [1, 4, 5];
 
-const userReservationRequest = [
-  { idUser: 1, idAnnonce: 3 },
-  { idUser: 2, idAnnonce: 1 },
-];
+const userReservationRequest = [];
 
 export const getAnnonces = () => annonces;
 export const getUsers = () => users;
@@ -61,7 +58,7 @@ export const getUsers = () => users;
 export const getAnnonce = (id) =>
   annonces.find((annonce) => annonce.id === +id);
 
-export const getUser = (id) => users.find((annonce) => annonce.id === +id);
+export const getUser = (id) => users.find((annonce) => annonce.id === id);
 
 export const addAnnonce = (data) =>
   annonces.push({ id: annonces.length + 1, ...data });
@@ -82,4 +79,5 @@ export const getReservationRequest = () =>
         .idUser,
     }));
 
-console.log(getReservationRequest());
+export const addReservation = ({ idAnnonce, idUser }) =>
+  userReservationRequest.push({ idAnnonce: idAnnonce, idUser: idUser });

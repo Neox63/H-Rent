@@ -4,7 +4,7 @@ import { createContext } from "react";
 export const UserContext = createContext({ user: {} });
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState({ id: 1 });
   const [isLogged, setIsLogged] = useState(true);
 
   /* useEffect(() => {

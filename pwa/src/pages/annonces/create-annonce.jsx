@@ -1,22 +1,31 @@
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
+import BreadCrumb from "../../components/BreadCrumb";
 import { addAnnonce } from "../../fakeAPI";
 
 const CreateAnnonce = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const history = useHistory();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    addAnnonce({ title: title, description: description, price: price });
+    addAnnonce({
+      title: title,
+      description: description,
+      price: price,
+    });
+    history.push("/");
   };
 
   useEffect(() => {}, []);
 
   return (
     <>
-      <div>Création d'annonce</div>
+      <BreadCrumb links={[{ url: "/create", label: "Créer une annonce" }]} />
+      <div className="my-8 text-2xl">Création d'annonce</div>
       <div className="text-black">
         <form onSubmit={handleSubmit}>
           <div className="flex flex-col w-1/2">

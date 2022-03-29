@@ -45,7 +45,7 @@ const Navbar = () => {
 
           <div className="px-8">
             <button className="mr-4">
-              <i class="fas fa-moon"></i>
+              <i className="fas fa-moon"></i>
             </button>
           </div>
         </div>

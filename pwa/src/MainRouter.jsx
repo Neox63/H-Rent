@@ -7,7 +7,7 @@ import FavoriteAnnonces from "./pages/favorites";
 import Home from "./pages/home";
 import Login from "./pages/login";
 import Profil from "./pages/profil";
-import Requests from "./pages/requests";
+import Requests from "./pages/reservation-requests";
 /* import Page404 from "./pages/page-404"; */
 
 const MainRouter = () => {
