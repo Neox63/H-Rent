@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="bg-gray-200 w-full px-12 p-4 text-center font-bold">
+    <footer className="w-full p-4 px-12 font-bold text-center border-t border-gray-400">
       <span>© {new Date(Date.now()).getFullYear()} H-Rent</span>
     </footer>
   );

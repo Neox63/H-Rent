@@ -1,11 +1,9 @@
 import { Redirect, Route } from "react-router-dom";
-
-import { useUser } from "../../hooks/user";
+import { useUser } from "../../providers/user";
 
 function PrivateRoute({ children, ...rest }) {
   const { isLogged } = useUser();
 
-  console.log("Route :", isLogged);
   return (
     <Route
       {...rest}
