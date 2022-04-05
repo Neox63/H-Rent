@@ -35,6 +35,8 @@ const CreateAnnonce = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Title"
+              required
+              aria-required="true"
             />
             <input
               type="text"
@@ -42,6 +44,8 @@ const CreateAnnonce = () => {
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Description"
+              required
+              aria-required="true"
             />
             <input
               type="text"
@@ -49,6 +53,8 @@ const CreateAnnonce = () => {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Prix"
+              required
+              aria-required="true"
             />
 
             <button className="p-2 bg-indigo-500 rounded-lg" type="submit">
