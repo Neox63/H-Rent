@@ -1,49 +1,54 @@
-import { useUser } from "../../hooks/user";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
-  const { isLogged } = useUser();
-
   return (
     <>
-      <div
-        className={`text-center py-4 font-bold text-xl ${
-          isLogged ? "bg-green-500" : "bg-red-500"
-        }`}
-      >
-        {isLogged ? "Logged" : "Not logged"}
-      </div>
-      <nav className="flex items-center justify-between w-full h-20 px-12 bg-gray-200">
-        <div className="text-xl Navbar-logo">H-Rent</div>
-        <ul className="flex text-lg font-bold Navbar-items">
-          <li>
-            <a
-              href="/"
-              className="block px-4 py-2 mx-2 transition duration-100 ease-linear rounded-full md:mx-4 hover:bg-gray-300 hover:text-black hover:shadow-md"
-            >
-              <i className="far fa-heart md:mr-2"></i>
-              <span className="hidden md:inline-block">Mes Favoris</span>
-            </a>
-          </li>
+      <nav className="flex items-center justify-between w-full h-20 px-6 border-b border-gray-400">
+        <Link to="/">
+          <div className="Navbar-logo">H-Rent</div>
+        </Link>
+        <div className="flex">
+          <ul className="flex px-4 font-bold border-r">
+            <li className="mx-4">
+              <Link className="hover:text-indigo-500" to={"/create"}>
+                Poster une annonce
+              </Link>
+            </li>
 
-          <li>
-            <a
-              href="/"
-              className="block px-4 py-2 mx-2 transition duration-100 ease-linear rounded-full md:mx-4 hover:bg-gray-300 hover:text-black hover:shadow-md"
-            >
-              <i className="far fa-calendar md:mr-2"></i>
-              <span className="hidden md:inline-block">Mes Réservations</span>
-            </a>
-          </li>
+            <li className="mx-4">
+              <Link
+                className="hover:text-indigo-500"
+                to={"/reservation-request"}
+              >
+                Demande de réservation
+              </Link>
+            </li>
 
-          <li>
-            <button
-              onClick={() => {}}
-              className="px-4 py-2 mx-2 text-white transition duration-100 ease-linear bg-black rounded-full md:mx-4 hover:bg-gray-300 hover:text-black hover:shadow-md"
-            >
-              Connexion
+            <li className="mx-4">
+              <Link className="hover:text-indigo-500" to={"/annonces"}>
+                Annonces
+              </Link>
+            </li>
+
+            <li className="mx-4">
+              <Link className="hover:text-indigo-500" to={"/favoris"}>
+                Favoris
+              </Link>
+            </li>
+
+            <li className="mx-4">
+              <Link className="hover:text-indigo-500" to={"/reservations"}>
+                Réservations
+              </Link>
+            </li>
+          </ul>
+
+          <div className="px-8">
+            <button className="mr-4">
+              <i className="fas fa-moon"></i>
             </button>
-          </li>
-        </ul>
+          </div>
+        </div>
       </nav>
     </>
   );
