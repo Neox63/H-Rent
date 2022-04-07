@@ -26,7 +26,6 @@ CREATE TABLE `Announce` (
   `idAnnounce` int NOT NULL AUTO_INCREMENT,
   `title` varchar(45) DEFAULT NULL,
   `description` varchar(45) DEFAULT NULL,
-  `postalCode` int DEFAULT NULL,
   `max` int DEFAULT NULL,
   `caution` float DEFAULT NULL,
   `city`VARCHAR(60) DEFAULT NULL,
