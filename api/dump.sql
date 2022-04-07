@@ -29,7 +29,7 @@ CREATE TABLE `Announce` (
   `max` int DEFAULT NULL,
   `caution` float DEFAULT NULL,
   `city`VARCHAR(60) DEFAULT NULL,
-  `zipcode` VARCHAR(5),
+  `zipcode` VARCHAR(45),
   PRIMARY KEY (`idAnnounce`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -169,7 +169,7 @@ CREATE TABLE `user` (
   `passwdHash` varchar(255) DEFAULT NULL,
   `registeredAt` date DEFAULT NULL,
   `city` varchar(60) DEFAULT NULL,
-  `zipcode` varchar(5) DEFAULT NULL,
+  `zipcode` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idUser`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
