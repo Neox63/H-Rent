@@ -52,7 +52,7 @@ DROP TABLE IF EXISTS `Document`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `Document` (
   `idDocument` int NOT NULL AUTO_INCREMENT,
-  `idUser` varchar(45) NOT NULL,
+  `idUser` int NOT NULL,
   `docLocation` varchar(45) DEFAULT NULL,
   `idDocumentType` int NOT NULL,
   PRIMARY KEY (`idDocument`,`idUser`),
@@ -60,6 +60,11 @@ CREATE TABLE `Document` (
   CONSTRAINT `fk_Document_DocumentType1` FOREIGN KEY (`idDocumentType`) REFERENCES `DocumentType` (`idDocumentType`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+ALTER TABLE Document
+ADD CONSTRAINT Document_idUser
+FOREIGN KEY (idUser)
+REFERENCES user(idUser)
 
 --
 -- Dumping data for table `Document`
@@ -163,7 +168,7 @@ CREATE TABLE `user` (
   `lastname` varchar(45) DEFAULT NULL,
   `email` varchar(45) DEFAULT NULL,
   `passwdHash` varchar(255) DEFAULT NULL,
-  `registeredAt` datetime DEFAULT NULL,
+  `registeredAt` date DEFAULT NULL,
   `city` varchar(60) DEFAULT NULL,
   `zipcode` varchar(5) DEFAULT NULL,
   PRIMARY KEY (`idUser`)
