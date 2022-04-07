@@ -30,6 +30,8 @@ CREATE TABLE `Announce` (
   `caution` float DEFAULT NULL,
   `city`VARCHAR(60) DEFAULT NULL,
   `zipcode` VARCHAR(45),
+  `cniNeeded` TINYINT,
+
   PRIMARY KEY (`idAnnounce`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -210,6 +212,21 @@ LOCK TABLES `WishList` WRITE;
 /*!40000 ALTER TABLE `WishList` DISABLE KEYS */;
 /*!40000 ALTER TABLE `WishList` ENABLE KEYS */;
 UNLOCK TABLES;
+
+CREATE TABLE `Announce_requiredDoc` (
+  `id` int AUTO_INCREMENT,
+  `idAnnounce` int,
+  `idDocumentType` int,
+  PRIMARY KEY(id,idAnnounce,idDocumentType)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+ALTER TABLE Announce_requiredDoc
+ADD CONSTRAINT Announce_requiredDoc_idAnnounce
+FOREIGN KEY (idAnnounce) REFERENCES Announce(idAnnounce);
+
+ALTER TABLE Announce_requiredDoc
+ADD CONSTRAINT Announce_requiredDoc_idDocumentType
+FOREIGN KEY (idDocumentType) REFERENCES DocumentType(idDocumentType);
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

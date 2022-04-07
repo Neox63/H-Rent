@@ -4,6 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const userRouter = require("./routes/user.js");
 const pictureRouter = require("./routes/pictures.js");
+const documentRouter = require("./routes/document.js");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -14,6 +15,7 @@ app.get("/api/", (req, res) => {
 
 app.use("/api/user", userRouter);
 app.use("/api/pictures", pictureRouter);
+app.use("/api/document", documentRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.message);
