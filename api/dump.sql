@@ -65,7 +65,7 @@ CREATE TABLE `Document` (
 ALTER TABLE Document
 ADD CONSTRAINT Document_idUser
 FOREIGN KEY (idUser)
-REFERENCES user(idUser)
+REFERENCES user(idUser);
 
 --
 -- Dumping data for table `Document`
