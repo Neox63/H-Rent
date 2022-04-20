@@ -4,17 +4,25 @@ const announce = require("../services/announce.js");
 
 router.get("/", async (req, res, next) => {
   try {
-    res.json(await announce.getAnnounces(req.query.page));
+    res.json(await announce.getAd(req.query.page));
   } catch (err) {
     console.error(err.message);
     next(err);
   }
 });
 
-router.get("/create", async (req, res, next) => {
+router.get("/id", async (req, res, next) => {
   try {
-    // res.json(await announce.createAnnonce(req.body));
-    res.writeHead(req.body)
+    res.json(await announce.getAdById(req.query.page));
+  } catch (err) {
+    console.error(err.message);
+    next(err);
+  }
+});
+
+router.post("/create", async (req, res, next) => {
+  try {
+    res.json(await announce.createAd(req.body));
   } catch (err) {
     console.error(err.message);
     next(err);
