@@ -23,9 +23,13 @@ const AnnonceItem = ({ initialData }) => {
             </div>
           </div>
           <div>
-            <span>2 voyageurs - </span>
-            <span>1 chambre - </span>
-            <span>2 lits</span>
+            <span>
+              {initialData.rooms} chambre{initialData.rooms > 1 && "s"}
+            </span>
+            <span> - </span>
+            <span>
+              {initialData.capacity} lit{initialData.capacity > 1 && "s"}
+            </span>
           </div>
         </div>
 
