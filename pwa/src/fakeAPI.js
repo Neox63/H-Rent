@@ -13,7 +13,7 @@ const annonces = [
     cniNeeded: true,
     passeportNeeded: false,
     justificatifNeeded: true,
-    animalsAllowed: true,
+    petsAllowed: true,
     smokersAllowed: true,
     arrivalHour: "10:00",
     departureHour: "12:00",
@@ -34,7 +34,7 @@ const annonces = [
     cniNeeded: true,
     passeportNeeded: false,
     justificatifNeeded: true,
-    animalsAllowed: false,
+    petsAllowed: false,
     smokersAllowed: true,
     arrivalHour: "10:00",
     departureHour: "12:00",
@@ -55,7 +55,7 @@ const annonces = [
     cniNeeded: true,
     passeportNeeded: false,
     justificatifNeeded: true,
-    animalsAllowed: true,
+    petsAllowed: true,
     smokersAllowed: true,
     arrivalHour: "10:00",
     departureHour: "12:00",
@@ -76,7 +76,7 @@ const annonces = [
     cniNeeded: true,
     passeportNeeded: false,
     justificatifNeeded: true,
-    animalsAllowed: false,
+    petsAllowed: false,
     smokersAllowed: false,
     arrivalHour: "10:00",
     departureHour: "12:00",
@@ -97,7 +97,7 @@ const annonces = [
     cniNeeded: true,
     passeportNeeded: false,
     justificatifNeeded: true,
-    animalsAllowed: true,
+    petsAllowed: true,
     smokersAllowed: false,
     arrivalHour: "10:00",
     departureHour: "12:00",
@@ -130,13 +130,11 @@ const userReservationRequest = [];
 export const getAnnonces = () => annonces;
 export const getUsers = () => users;
 
-export const getAnnonce = (id) =>
-  annonces.find((annonce) => annonce.id === +id);
+export const getAnnonce = (id) => annonces.find((annonce) => annonce.id === +id);
 
 export const getUser = (id) => users.find((annonce) => annonce.id === id);
 
-export const addAnnonce = (data) =>
-  annonces.push({ id: annonces.length + 1, ...data });
+export const addAnnonce = (data) => annonces.push({ id: annonces.length + 1, ...data });
 
 export const addUser = (data) => users.push({ id: users.length + 1, ...data });
 
@@ -150,8 +148,7 @@ export const getReservationRequest = () =>
     )
     .map((annonce) => ({
       annonce: annonce,
-      idUser: userReservationRequest.find((req) => req.idAnnonce === annonce.id)
-        .idUser,
+      idUser: userReservationRequest.find((req) => req.idAnnonce === annonce.id).idUser,
     }));
 
 export const addReservation = ({ idAnnonce, idUser }) =>
