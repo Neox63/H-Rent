@@ -51,7 +51,7 @@ public class DocumentController {
             String fileName = fileStorageService.storeFile(file);
 
             String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/downloadFile/")
+                    .path("/assets/")
                     .path(fileName)
                     .toUriString();
 
