@@ -2,6 +2,7 @@ import Container from "../../components/Container";
 import AnnonceItem from "../../components/AnnonceItem";
 import { getAnnonces, getFavoriteAnnonces } from "../../fakeAPI";
 import BreadCrumb from "../../components/BreadCrumb";
+import Search from "../../components/Search";
 
 const Annonces = () => {
   const initialData = getAnnonces();
@@ -9,10 +10,12 @@ const Annonces = () => {
 
   return (
     <>
-      <BreadCrumb links={[{ url: "/annonces", label: "Annonces" }]} />
-      <div className="my-8 text-2xl">Liste des annonces</div>
+      <BreadCrumb links={[{ url: "/annonces", label: "Annonces" }]} className="mb-8" />
+
+      <Search />
 
       <Container className="w-full mx-auto lg:w-3/4">
+        <div className="mt-8 text-2xl font-extrabold">Liste des locations</div>
         {initialData.map((annonceData, index) => (
           <AnnonceItem
             key={index}
