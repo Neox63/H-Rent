@@ -2,11 +2,11 @@ import { Link } from "react-router-dom";
 
 const AnnonceItem = ({ initialData }) => {
   return (
-    <div className="flex flex-col my-8 border-4 border-black rounded-b-lg shadow-xl md:h-64 md:rounded-lg md:flex-row">
+    <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">
       <img
         src="https://images.unsplash.com/photo-1528111057883-4f5a995343bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2835&q=80"
         alt=""
-        className="w-full h-64 rounded-t-lg md:rounded-t-none md:h-auto md:rounded-l-lg md:w-1/4"
+        className="w-full h-64 md:h-auto md:w-2/5 md:rounded-lg"
       />
       <div className="flex flex-col justify-between w-full p-4">
         <div className="flex flex-col">
@@ -28,7 +28,10 @@ const AnnonceItem = ({ initialData }) => {
           </div>
         </div>
 
-        <div className="self-end text-xl font-bold">{initialData.price}e / nuit</div>
+        <div className="self-end text-lg">
+          à partir de <span className="text-2xl font-bold">{initialData.price}e</span> /
+          nuit
+        </div>
       </div>
     </div>
   );
