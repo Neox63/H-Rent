@@ -51,222 +51,160 @@ const CreateAnnonce = () => {
   return (
     <>
       <BreadCrumb links={[{ url: "/create", label: "Créer une annonce" }]} />
-      <div className="my-8 text-2xl">Création d'annonce</div>
-      <div className="text-black">
+      <div className="my-8 text-2xl font-extrabold text-center">Déposer une annonce</div>
+      <div>
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-col w-1/2">
-            <input
-              type="text"
-              className="p-2 my-4 rounded-md"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Title"
-              required
-              aria-required="true"
-            />
-
-            <select
-              name="type"
-              id="type"
-              className="p-2 my-4 rounded-md"
-              required
-              onChange={(e) => setType(e.target.value)}
+          <div className="flex flex-col w-2/3 gap-8 mx-auto">
+            <div
+              style={{
+                boxShadow:
+                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
+              }}
+              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
             >
-              <option value="Appartement">Appartement</option>
-              <option value="Chalet">Chalet</option>
-              <option value="Chambre">Chambre</option>
-              <option value="Chateau">Chateau</option>
-              <option value="Villa">Villa</option>
-              <option value="Studio">Studio</option>
-              <option value="Autre">Autre</option>
-            </select>
-
-            <textarea
-              type="text"
-              rows={8}
-              className="p-2 my-4 rounded-md"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              placeholder="Description"
-              required
-              aria-required="true"
-            />
-
-            <div className="flex gap-2 my-4">
+              <span className="text-lg font-bold">Commençons par un titre !</span>
               <input
                 type="text"
-                className="w-2/3 p-2 rounded-md"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                placeholder="Ville"
-                required
-                aria-required="true"
-              />
-              <input
-                type="text"
-                className="w-1/3 p-2 rounded-md"
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                placeholder="Code Postal"
+                className="p-2 my-4 bg-gray-100 border rounded-md"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Quel est le titre de l'annonce ?"
                 required
                 aria-required="true"
               />
             </div>
 
-            <div className="flex justify-around my-4">
-              <div className="flex flex-col items-center justify-center mb-6 text-white available-bed">
-                <span>Capacité de l'hébergement (nombre de couchages)</span>
-                <div className="flex">
-                  <button
-                    onClick={() =>
-                      setAvailablePlaces((availablePlaces) =>
-                        availablePlaces < 1 ? 0 : availablePlaces - 1
-                      )
-                    }
-                    type="button"
-                    className="px-2 bg-indigo-500 rounded-lg "
-                  >
-                    -
-                  </button>
-                  <span className="mx-4 my-auto ">{availablePlaces}</span>
-                  <button
-                    onClick={() =>
-                      setAvailablePlaces((availablePlaces) => availablePlaces + 1)
-                    }
-                    type="button"
-                    className="px-2 bg-indigo-500 rounded-lg "
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex flex-col items-center justify-center mb-6 text-white available-bed">
-                <span>Nombre de chambres</span>
-                <div className="flex">
-                  <button
-                    onClick={() =>
-                      setAvailableRooms((availablePlaces) =>
-                        availablePlaces < 1 ? 0 : availablePlaces - 1
-                      )
-                    }
-                    type="button"
-                    className="px-2 bg-indigo-500 rounded-lg "
-                  >
-                    -
-                  </button>
-                  <span className="mx-4 my-auto ">{availableRooms}</span>
-                  <button
-                    onClick={() =>
-                      setAvailableRooms((availablePlaces) => availablePlaces + 1)
-                    }
-                    type="button"
-                    className="px-2 bg-indigo-500 rounded-lg "
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <input
-              type="text"
-              className="p-2 my-4 rounded-md"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Prix par nuit"
-              required
-              aria-required="true"
-            />
-
-            <input
-              type="text"
-              className="p-2 my-4 rounded-md"
-              value={bail}
-              onChange={(e) => setBail(e.target.value)}
-              placeholder="Montant de la caution"
-              required
-              aria-required="true"
-            />
-
-            <div className="flex flex-col items-center mb-4 text-white requiredDocuments">
-              <span className="mb-4 text-lg font-bold">
-                Documents à fournir par le locataire lors de la réservation
+            <div
+              style={{
+                boxShadow:
+                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
+              }}
+              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
+            >
+              <span className="mb-8 text-lg font-bold">
+                Dites nous en plus sur votre bien
               </span>
 
-              <div className="flex items-center gap-4">
-                <div>
-                  <input
-                    type="checkbox"
-                    name="cni"
-                    id="cni"
-                    className="mr-3"
-                    checked={cniNeeded}
-                    onChange={() => setCNINeeded(!cniNeeded)}
-                  />
-                  <label htmlFor="cni">Carte Nationale d'Identité</label>
+              <span className="font-bold ">Type d'hébergement</span>
+              <select
+                name="type"
+                id="type"
+                className="p-2 mt-2 mb-4 bg-gray-100 border rounded-md"
+                required
+                onChange={(e) => setType(e.target.value)}
+              >
+                <option value="Appartement">Appartement</option>
+                <option value="Chalet">Chalet</option>
+                <option value="Chambre">Chambre</option>
+                <option value="Chateau">Chateau</option>
+                <option value="Villa">Villa</option>
+                <option value="Studio">Studio</option>
+                <option value="Autre">Autre</option>
+              </select>
+
+              <div className="flex justify-around my-4">
+                <div className="flex flex-col items-center justify-center mb-6 available-bed">
+                  <span className="font-bold">
+                    Capacité de l'hébergement (nombre de couchages)
+                  </span>
+                  <div className="flex">
+                    <button
+                      onClick={() =>
+                        setAvailablePlaces((availablePlaces) =>
+                          availablePlaces < 1 ? 0 : availablePlaces - 1
+                        )
+                      }
+                      type="button"
+                      className="px-2 bg-green-500 rounded-lg "
+                    >
+                      -
+                    </button>
+                    <span className="mx-4 my-auto ">{availablePlaces}</span>
+                    <button
+                      onClick={() =>
+                        setAvailablePlaces((availablePlaces) => availablePlaces + 1)
+                      }
+                      type="button"
+                      className="px-2 bg-green-500 rounded-lg "
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
 
-                <div>
-                  <input
-                    type="checkbox"
-                    name="passeport"
-                    id="passeport"
-                    className="mr-3"
-                    checked={passeportNeeded}
-                    onChange={() => setPasseportNeeded(!passeportNeeded)}
-                  />
-                  <label htmlFor="passeport">Passeport</label>
-                </div>
-
-                <div>
-                  <input
-                    type="checkbox"
-                    name="justificatif"
-                    id="justificatif"
-                    className="mr-3"
-                    checked={justificatifNeeded}
-                    onChange={() => setJustificatifNeeded(!justificatifNeeded)}
-                  />
-                  <label htmlFor="justificatif">Justificatif de domicile</label>
+                <div className="flex flex-col items-center justify-center mb-6 available-bed">
+                  <span className="font-bold">Nombre de chambres</span>
+                  <div className="flex">
+                    <button
+                      onClick={() =>
+                        setAvailableRooms((availablePlaces) =>
+                          availablePlaces < 1 ? 0 : availablePlaces - 1
+                        )
+                      }
+                      type="button"
+                      className="px-2 bg-green-500 rounded-lg "
+                    >
+                      -
+                    </button>
+                    <span className="mx-4 my-auto ">{availableRooms}</span>
+                    <button
+                      onClick={() =>
+                        setAvailableRooms((availablePlaces) => availablePlaces + 1)
+                      }
+                      type="button"
+                      className="px-2 bg-green-500 rounded-lg "
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div className="flex flex-col items-center mt-8 mb-4 text-lg font-bold text-white">
-              <span className="mb-4">
-                Informations supplémentaires concernant le logement
-              </span>
+              <div className="flex flex-col items-center mb-4 requiredDocuments">
+                <span className="mb-4 text-lg font-bold">
+                  Documents à fournir par le locataire lors de la réservation
+                </span>
 
-              <div className="flex gap-4">
-                <div className="flex flex-col justify-center">
-                  <label htmlFor="arrival">Heure d'arrivé</label>
-                  <input
-                    name="arrival"
-                    className="px-4 bg-indigo-400"
-                    onChange={(e) => setArrivalHour(e.target.value)}
-                    type="time"
-                    min="6:00"
-                    max="22:00"
-                    required
-                  />
-                </div>
+                <div className="flex items-center gap-4">
+                  <div>
+                    <input
+                      type="checkbox"
+                      name="cni"
+                      id="cni"
+                      className="mr-3"
+                      checked={cniNeeded}
+                      onChange={() => setCNINeeded(!cniNeeded)}
+                    />
+                    <label htmlFor="cni">Carte Nationale d'Identité</label>
+                  </div>
 
-                <div className="flex flex-col justify-center">
-                  <label htmlFor="departure">Heure de départ</label>
-                  <input
-                    name="departure"
-                    className="px-4 bg-indigo-400"
-                    onChange={(e) => setDepartureHour(e.target.value)}
-                    type="time"
-                    min="6:00"
-                    max="22:00"
-                    required
-                  />
+                  <div>
+                    <input
+                      type="checkbox"
+                      name="passeport"
+                      id="passeport"
+                      className="mr-3"
+                      checked={passeportNeeded}
+                      onChange={() => setPasseportNeeded(!passeportNeeded)}
+                    />
+                    <label htmlFor="passeport">Passeport</label>
+                  </div>
+
+                  <div>
+                    <input
+                      type="checkbox"
+                      name="justificatif"
+                      id="justificatif"
+                      className="mr-3"
+                      checked={justificatifNeeded}
+                      onChange={() => setJustificatifNeeded(!justificatifNeeded)}
+                    />
+                    <label htmlFor="justificatif">Justificatif de domicile</label>
+                  </div>
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 mt-4">
+              <div className="flex items-center justify-center gap-4 my-4">
                 <div>
                   <input
                     type="checkbox"
@@ -291,10 +229,131 @@ const CreateAnnonce = () => {
                   <label htmlFor="pets">Animaux acceptés</label>
                 </div>
               </div>
+              <div className="flex gap-4 mx-auto">
+                <div className="flex flex-col justify-center">
+                  <label className="font-bold" htmlFor="arrival">
+                    Heure d'arrivé
+                  </label>
+                  <input
+                    name="arrival"
+                    className="px-4 bg-green-400 rounded-md"
+                    onChange={(e) => setArrivalHour(e.target.value)}
+                    type="time"
+                    min="6:00"
+                    max="22:00"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col justify-center">
+                  <label className="font-bold" htmlFor="departure">
+                    Heure de départ
+                  </label>
+                  <input
+                    name="departure"
+                    className="px-4 bg-green-400 rounded-md"
+                    onChange={(e) => setDepartureHour(e.target.value)}
+                    type="time"
+                    min="6:00"
+                    max="22:00"
+                    required
+                  />
+                </div>
+              </div>
             </div>
 
-            <button className="p-4 bg-indigo-500 rounded-lg" type="submit">
-              Valider
+            <div
+              style={{
+                boxShadow:
+                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
+              }}
+              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
+            >
+              <span className="mb-8 text-lg font-bold">Décrivez votre bien !</span>
+              <textarea
+                type="text"
+                rows={8}
+                className="p-2 bg-gray-100 border rounded-md"
+                value={description}
+                onChange={(e) =>
+                  description.length < 3000 && setDescription(e.target.value)
+                }
+                placeholder="Description de votre annonce, attention, elle est limite à 3000 caractères !"
+                required
+                aria-required="true"
+              />
+              <span className="text-right text-gray-500">
+                {description.length} / 3000 caractères
+              </span>
+            </div>
+
+            <div
+              style={{
+                boxShadow:
+                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
+              }}
+              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
+            >
+              <span className="mb-8 text-lg font-bold">
+                Parlons argent, quel est votre prix ?
+              </span>
+
+              <input
+                type="number"
+                min={0}
+                className="p-2 my-4 bg-gray-100 border rounded-md"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Prix par nuit"
+                required
+                aria-required="true"
+              />
+
+              <input
+                type="number"
+                min={0}
+                max={price}
+                className="p-2 my-4 bg-gray-100 border rounded-md"
+                value={bail}
+                onChange={(e) => setBail(e.target.value)}
+                placeholder="Montant de la caution"
+                required
+                aria-required="true"
+              />
+            </div>
+
+            <div
+              style={{
+                boxShadow:
+                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
+              }}
+              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
+            >
+              <span className="mb-8 text-lg font-bold">Où se situe votre bien ?</span>
+              <div className="flex gap-2 my-4">
+                <input
+                  type="text"
+                  className="w-2/3 p-2 bg-gray-100 border rounded-md"
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="Ville"
+                  required
+                  aria-required="true"
+                />
+                <input
+                  type="text"
+                  className="w-1/3 p-2 bg-gray-100 border rounded-md"
+                  value={zipCode}
+                  onChange={(e) => setZipCode(e.target.value)}
+                  placeholder="Code Postal"
+                  required
+                  aria-required="true"
+                />
+              </div>
+            </div>
+
+            <button className="w-2/3 mx-auto Button" type="submit">
+              Déposer l'annonce
             </button>
           </div>
         </form>
