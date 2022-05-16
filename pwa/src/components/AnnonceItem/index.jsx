@@ -4,9 +4,13 @@ const AnnonceItem = ({ initialData }) => {
   return (
     <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">
       <img
-        src="https://images.unsplash.com/photo-1528111057883-4f5a995343bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2835&q=80"
+        src={
+          initialData.images.length > 0
+            ? URL.createObjectURL(initialData.images[0])
+            : "https://images.unsplash.com/photo-1528111057883-4f5a995343bb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2835&q=80"
+        }
         alt=""
-        className="w-full h-64 md:h-auto md:w-2/5 md:rounded-lg"
+        className="w-full h-64 md:w-2/5 md:h-auto md:rounded-lg"
       />
       <div className="flex flex-col justify-between w-full p-4">
         <div className="flex flex-col">

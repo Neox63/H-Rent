@@ -16,3 +16,7 @@ body {
 .Button {
   @apply px-4 py-2 text-white bg-green-700 rounded-md hover:bg-green-800;
 }
+
+.custom-shadow {
+  box-shadow: 0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%);
+}

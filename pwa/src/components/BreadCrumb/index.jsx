@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-const BreadCrumb = ({ links, className }) => {
+const BreadCrumb = ({ links, className = "" }) => {
   return (
     <div className={`${className}`}>
       <Link className="hover:text-green-700" to={"/"}>

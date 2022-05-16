@@ -25,12 +25,7 @@ const Search = () => {
   };
 
   return (
-    <div
-      className="flex flex-col w-2/3 px-4 py-8 mx-auto bg-white rounded-md"
-      style={{
-        boxShadow: "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-      }}
-    >
+    <div className="flex flex-col w-2/3 px-4 py-8 mx-auto bg-white rounded-md custom-shadow">
       <div className="flex gap-4 mb-8">
         <input
           type="text"

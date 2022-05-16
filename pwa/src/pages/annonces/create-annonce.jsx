@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import BreadCrumb from "../../components/BreadCrumb";
+import ImageGallery from "../../components/ImageGallery";
+import Separator from "../../components/Separator";
 import { addAnnonce } from "../../fakeAPI";
 
 const CreateAnnonce = () => {
@@ -11,7 +13,6 @@ const CreateAnnonce = () => {
   const [zipCode, setZipCode] = useState("");
   const [bail, setBail] = useState("");
   const [availablePlaces, setAvailablePlaces] = useState(1);
-  const [availableRooms, setAvailableRooms] = useState(1);
   const [cniNeeded, setCNINeeded] = useState(false);
   const [passeportNeeded, setPasseportNeeded] = useState(false);
   const [justificatifNeeded, setJustificatifNeeded] = useState(false);
@@ -20,6 +21,8 @@ const CreateAnnonce = () => {
   const [arrivalHour, setArrivalHour] = useState("");
   const [departureHour, setDepartureHour] = useState("");
   const [type, setType] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [images, setImages] = useState([]);
 
   const history = useHistory();
 
@@ -34,7 +37,6 @@ const CreateAnnonce = () => {
       country: country,
       zipCode: zipCode,
       capacity: availablePlaces,
-      rooms: availableRooms,
       bail: bail,
       cniNeeded: cniNeeded,
       passeportNeeded: passeportNeeded,
@@ -43,6 +45,7 @@ const CreateAnnonce = () => {
       petsAllowed: petsAllowed,
       arrivalHour: arrivalHour,
       departureHour: departureHour,
+      images: Array.from(images),
     });
 
     history.push("/");
@@ -53,15 +56,9 @@ const CreateAnnonce = () => {
       <BreadCrumb links={[{ url: "/create", label: "Créer une annonce" }]} />
       <div className="my-8 text-2xl font-extrabold text-center">Déposer une annonce</div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="flex flex-col w-2/3 gap-8 mx-auto">
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="text-lg font-bold">Commençons par un titre !</span>
               <input
                 type="text"
@@ -74,17 +71,33 @@ const CreateAnnonce = () => {
               />
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-4 text-lg font-bold">
+                Ajoutez des images à votre annonce (5 maximum)
+              </span>
+              <input
+                multiple
+                accept="image/*"
+                name="file"
+                id="file"
+                type="file"
+                onChange={(e) =>
+                  e.target.files.length <= 5
+                    ? setImages(e.target.files)
+                    : alert("Vous ne pouvez pas déposer plus de 5 images à la fois !")
+                }
+                className="hidden"
+              />
+              <label htmlFor="file" className="mx-auto cursor-pointer Button w-max">
+                Cliquez pour ajouter des images
+              </label>
+              {images.length > 0 && <ImageGallery images={Array.from(images)} />}
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">
                 Dites nous en plus sur votre bien
               </span>
-
               <span className="font-bold ">Type d'hébergement</span>
               <select
                 name="type"
@@ -104,7 +117,7 @@ const CreateAnnonce = () => {
 
               <div className="flex justify-around my-4">
                 <div className="flex flex-col items-center justify-center mb-6 available-bed">
-                  <span className="font-bold">
+                  <span className="mb-4 font-bold">
                     Capacité de l'hébergement (nombre de couchages)
                   </span>
                   <div className="flex">
@@ -115,7 +128,7 @@ const CreateAnnonce = () => {
                         )
                       }
                       type="button"
-                      className="px-2 bg-green-500 rounded-lg "
+                      className="Button"
                     >
                       -
                     </button>
@@ -125,42 +138,15 @@ const CreateAnnonce = () => {
                         setAvailablePlaces((availablePlaces) => availablePlaces + 1)
                       }
                       type="button"
-                      className="px-2 bg-green-500 rounded-lg "
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center justify-center mb-6 available-bed">
-                  <span className="font-bold">Nombre de chambres</span>
-                  <div className="flex">
-                    <button
-                      onClick={() =>
-                        setAvailableRooms((availablePlaces) =>
-                          availablePlaces < 1 ? 0 : availablePlaces - 1
-                        )
-                      }
-                      type="button"
-                      className="px-2 bg-green-500 rounded-lg "
-                    >
-                      -
-                    </button>
-                    <span className="mx-4 my-auto ">{availableRooms}</span>
-                    <button
-                      onClick={() =>
-                        setAvailableRooms((availablePlaces) => availablePlaces + 1)
-                      }
-                      type="button"
-                      className="px-2 bg-green-500 rounded-lg "
+                      className="Button"
                     >
                       +
                     </button>
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col items-center mb-4 requiredDocuments">
+              <Separator />
+              <div className="flex flex-col items-center my-4 requiredDocuments">
                 <span className="mb-4 text-lg font-bold">
                   Documents à fournir par le locataire lors de la réservation
                 </span>
@@ -203,7 +189,7 @@ const CreateAnnonce = () => {
                   </div>
                 </div>
               </div>
-
+              <Separator />
               <div className="flex items-center justify-center gap-4 my-4">
                 <div>
                   <input
@@ -262,13 +248,7 @@ const CreateAnnonce = () => {
               </div>
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">Décrivez votre bien !</span>
               <textarea
                 type="text"
@@ -276,7 +256,8 @@ const CreateAnnonce = () => {
                 className="p-2 bg-gray-100 border rounded-md"
                 value={description}
                 onChange={(e) =>
-                  description.length < 3000 && setDescription(e.target.value)
+                  (description.length < 3000 || description.length < e.target.value) &&
+                  setDescription(e.target.value)
                 }
                 placeholder="Description de votre annonce, attention, elle est limite à 3000 caractères !"
                 required
@@ -287,13 +268,7 @@ const CreateAnnonce = () => {
               </span>
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">
                 Parlons argent, quel est votre prix ?
               </span>
@@ -322,13 +297,7 @@ const CreateAnnonce = () => {
               />
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">Où se situe votre bien ?</span>
               <div className="flex gap-2 my-4">
                 <input
@@ -350,6 +319,19 @@ const CreateAnnonce = () => {
                   aria-required="true"
                 />
               </div>
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-8 text-lg font-bold">Contact de l'hôte</span>
+              <input
+                type="text"
+                className="w-1/3 p-2 bg-gray-100 border rounded-md"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Votre numéro de téléphone"
+                required
+                aria-required="true"
+              />
             </div>
 
             <button className="w-2/3 mx-auto Button" type="submit">

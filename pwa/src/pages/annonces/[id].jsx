@@ -4,6 +4,8 @@ import { Redirect, useHistory } from "react-router-dom";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useUser } from "../../providers/user";
 import Separator from "../../components/Separator";
+import Pill from "../../components/Pill";
+import ImageGallery from "../../components/ImageGallery";
 
 const Annonce = () => {
   const { id } = useParams();
@@ -27,6 +29,8 @@ const Annonce = () => {
           { url: `/annonce/${id}`, label: id },
         ]}
       />
+
+      <ImageGallery images={currentAnnonce.images} />
       <div className="mt-8 mb-4 text-3xl font-extrabold">{currentAnnonce.title}</div>
       <div className="mb-4">
         {currentAnnonce.type} · {currentAnnonce.capacity} pers. · {currentAnnonce.rooms}{" "}
@@ -35,12 +39,12 @@ const Annonce = () => {
 
       <div className="mb-4 text-lg">
         à partir de <span className="text-2xl font-bold">{currentAnnonce.price}e</span> /
-        nuits
+        nuit
       </div>
 
       <div className="text-sm">{currentAnnonce.createdAt}</div>
 
-      <button onClick={reserve} className="p-2 mt-4 bg-indigo-600 rounded-lg">
+      <button onClick={reserve} className="mt-4 Button">
         Réserver le bien
       </button>
 
@@ -54,53 +58,46 @@ const Annonce = () => {
       <Separator className="my-4" />
 
       <div className="flex flex-col p-4">
-        <span className="text-lg font-bold">Critères</span>
-        <div className="p-4">
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Type d'hébergement : {currentAnnonce.type}
-          </div>
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Capacité : {currentAnnonce.capacity}
-          </div>
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Nombre de chambres : {currentAnnonce.rooms}
-          </div>
+        <span className="text-lg font-bold">Informations concernant cette location</span>
+        <div className="flex flex-wrap gap-4 p-4">
+          <Pill
+            content={`Type d'hébergement : ${currentAnnonce.type}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`Capacité : ${currentAnnonce.capacity}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`Nombre de chambres : ${currentAnnonce.rooms}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`Animaux : ${currentAnnonce.petsAllowed ? "Oui" : "Non"}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`${
+              currentAnnonce.smokersAllowed ? "Fumeurs acceptés" : "Fumeurs non acceptés"
+            }`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`Heure d'arrivée : ${currentAnnonce.arrivalHour}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
+
+          <Pill
+            content={`Heure de départ : ${currentAnnonce.departureHour}`}
+            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
+          />
         </div>
       </div>
-
-      <Separator className="my-4" />
-
-      <div className="flex flex-col p-4">
-        <span className="text-lg font-bold">Conditions d'hébergement</span>
-        <div className="p-4">
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Animaux acceptés : {currentAnnonce.petsAllowed ? "Oui" : "Non"}
-          </div>
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            {currentAnnonce.smokersAllowed ? "Fumeurs acceptés" : "Fumeurs non acceptés"}
-          </div>
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Heure d'arrivée : {currentAnnonce.arrivalHour}
-          </div>
-          <div className="px-2 my-3 bg-indigo-600 rounded-lg w-max">
-            Heure de départ : {currentAnnonce.departureHour}
-          </div>
-        </div>
-      </div>
-
-      <details className="p-4 border-2 border-indigo-600 rounded-lg select-none">
-        <summary>Informations supplémentaires</summary>
-        <div className="my-4">
-          <span className="font-bold">Documents à fournir :</span>
-          <ul>
-            {currentAnnonce.cniNeeded && <li>- Carte d'identité</li>}
-            {currentAnnonce.passeportNeeded && <li>- Passeport</li>}
-            {currentAnnonce.justificatifNeeded && <li>- Justificatif de domicile</li>}
-          </ul>
-        </div>
-
-        <div className="font-bold">Montant de la caution : {currentAnnonce.bail}e</div>
-      </details>
 
       <Separator className="my-4" />
     </>
