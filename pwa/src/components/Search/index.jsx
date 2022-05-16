@@ -8,6 +8,12 @@ const Search = () => {
   const [country, setCountry] = useState("");
   const [query, setQuery] = useState("");
 
+  const [capacityFilter, setCapacityFilter] = useState("1");
+  const [minPriceFilter, setMinPriceFilter] = useState("");
+  const [maxPriceFilter, setMaxPriceFilter] = useState("");
+
+  const [displayFilters, setDisplayFilters] = useState(false);
+
   const history = useHistory();
 
   const annonces = getAnnonces();
@@ -34,7 +40,7 @@ const Search = () => {
 
   return (
     <div className="flex flex-col w-2/3 px-4 py-8 mx-auto bg-white rounded-md custom-shadow">
-      <div className="relative flex gap-4 mb-8">
+      <div className="relative flex gap-4">
         <input
           type="text"
           name="title"
@@ -103,7 +109,46 @@ const Search = () => {
         </ul>
       </div>
 
-      <div className="filters"></div>
+      <button
+        className="my-8 font-bold text-green-700 w-max"
+        onClick={() => setDisplayFilters(!displayFilters)}
+      >
+        {displayFilters ? "Cacher" : "Afficher"} les filtres
+      </button>
+      {displayFilters ? (
+        <div className="flex flex-col items-center justify-center gap-4 mb-8 filters">
+          <div className="flex flex-col items-center justify-center">
+            <label for="capacity">Capacité</label>
+            <input
+              name="capacity"
+              id="capacity"
+              type="range"
+              min="1"
+              max="10"
+              value={capacityFilter}
+              onChange={(e) => setCapacityFilter(e.target.value)}
+            />
+            <span>{capacityFilter}</span>
+          </div>
+
+          <div className="flex gap-4">
+            <input
+              type="number"
+              className="px-4 py-2 bg-gray-100 rounded-lg"
+              placeholder="Prix minimum"
+              value={minPriceFilter}
+              onChange={(e) => setMinPriceFilter(e.target.value)}
+            />
+            <input
+              type="number"
+              className="px-4 py-2 bg-gray-100 rounded-lg"
+              placeholder="Prix maximum"
+              value={maxPriceFilter}
+              onChange={(e) => setMaxPriceFilter(e.target.value)}
+            />
+          </div>
+        </div>
+      ) : null}
 
       <button onClick={handleResearch} className="mx-auto Button">
         Rechercher ({annonces.length} résultats)

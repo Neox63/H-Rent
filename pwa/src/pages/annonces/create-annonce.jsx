@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
+import useSWR from "swr";
 import BreadCrumb from "../../components/BreadCrumb";
 import ImageGallery from "../../components/ImageGallery";
 import Separator from "../../components/Separator";
@@ -23,6 +24,14 @@ const CreateAnnonce = () => {
   const [type, setType] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [images, setImages] = useState([]);
+
+  const [query, setQuery] = useState("");
+
+  const { data, isValidating } = useSWR(
+    query.length > 0
+      ? `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5`
+      : null
+  );
 
   const history = useHistory();
 
@@ -299,16 +308,68 @@ const CreateAnnonce = () => {
 
             <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">Où se situe votre bien ?</span>
-              <div className="flex gap-2 my-4">
+              <div className="relative flex gap-2 my-4">
                 <input
                   type="text"
-                  className="w-2/3 p-2 bg-gray-100 border rounded-md"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
+                  name="location"
+                  id="location"
                   placeholder="Ville"
-                  required
-                  aria-required="true"
+                  value={country}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setQuery(e.target.value);
+                  }}
+                  className="relative w-1/2 px-4 py-2 bg-gray-100 rounded-lg"
                 />
+                <ul
+                  className={`absolute w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}
+                >
+                  {isValidating ? (
+                    <li className="py-4 text-2xl text-center text-red-500">
+                      <i className="fa fa-circle-notch fa-spin"></i>
+                    </li>
+                  ) : (
+                    <>
+                      {data?.features.length > 0 ? (
+                        <>
+                          {data?.features?.map((currCountry) => (
+                            <li
+                              onClick={() => {
+                                setQuery("");
+                                setCountry(currCountry?.properties?.label);
+                                setZipCode(currCountry?.properties?.postcode);
+                              }}
+                              className="flex flex-col px-8 py-4 cursor-pointer hover:bg-gray-200"
+                            >
+                              <span>
+                                {currCountry?.properties?.label} -{" "}
+                                {currCountry?.properties?.postcode}
+                              </span>
+                              <span className="text-sm text-gray-400">
+                                {currCountry?.properties?.context}
+                              </span>
+                            </li>
+                          ))}
+                        </>
+                      ) : (
+                        query.length > 0 && (
+                          <li className="px-8 py-4 text-center">
+                            <span>
+                              Aucun résultat{" "}
+                              <span>
+                                pour "
+                                <span className={`font-bold text-green-700`}>
+                                  {query}
+                                </span>
+                                "
+                              </span>
+                            </span>
+                          </li>
+                        )
+                      )}
+                    </>
+                  )}
+                </ul>
                 <input
                   type="text"
                   className="w-1/3 p-2 bg-gray-100 border rounded-md"
