@@ -1,23 +1,21 @@
 import { useParams } from "react-router";
-import { addReservation, getAnnonce } from "../../fakeAPI";
-import { Redirect, useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import BreadCrumb from "../../components/BreadCrumb";
 import { useUser } from "../../providers/user";
 import Separator from "../../components/Separator";
 import Pill from "../../components/Pill";
 import ImageGallery from "../../components/ImageGallery";
+import { useState } from "react";
+import ReservationModal from "./ReservationModal";
+import useSWR from "swr";
 
 const Annonce = () => {
   const { id } = useParams();
   const { user } = useUser();
-  const history = useHistory();
 
-  const currentAnnonce = getAnnonce(+id);
+  const [reservationModalOpen, setReservationModalOpen] = useState(false);
 
-  const reserve = () => {
-    addReservation({ idAnnonce: +id, idUser: user.id });
-    history.push("/");
-  };
+  const { data: currentAnnonce } = useSWR(`/announce/${id}`);
 
   if (!currentAnnonce) return <Redirect to={"/"} />;
 
@@ -30,11 +28,20 @@ const Annonce = () => {
         ]}
       />
 
-      <ImageGallery images={currentAnnonce.images} />
+      {reservationModalOpen && (
+        <ReservationModal
+          currentAnnonce={currentAnnonce}
+          user={user}
+          idAnnonce={currentAnnonce.id}
+          setReservationModalOpen={setReservationModalOpen}
+        />
+      )}
+
+      {/* <ImageGallery images={currentAnnonce.images} /> */}
       <div className="mt-8 mb-4 text-3xl font-extrabold">{currentAnnonce.title}</div>
       <div className="mb-4">
-        {currentAnnonce.type} · {currentAnnonce.capacity} pers. · {currentAnnonce.rooms}{" "}
-        ch. · {currentAnnonce.country}
+        {currentAnnonce.idTypeLogement} · {currentAnnonce.capacity} pers. ·{" "}
+        {currentAnnonce.city}
       </div>
 
       <div className="mb-4 text-lg">
@@ -42,9 +49,13 @@ const Annonce = () => {
         nuit
       </div>
 
-      <div className="text-sm">{currentAnnonce.createdAt}</div>
+      <div>
+        Disponible du {currentAnnonce.startDate} au {currentAnnonce.endDate}
+      </div>
 
-      <button onClick={reserve} className="mt-4 Button">
+      <div className="text-sm">{currentAnnonce.createdDate}</div>
+
+      <button onClick={() => setReservationModalOpen(true)} className="mt-4 Button">
         Réserver le bien
       </button>
 
@@ -61,17 +72,12 @@ const Annonce = () => {
         <span className="text-lg font-bold">Informations concernant cette location</span>
         <div className="flex flex-wrap gap-4 p-4">
           <Pill
-            content={`Type d'hébergement : ${currentAnnonce.type}`}
+            content={`Type d'hébergement : ${currentAnnonce.idTypeLogement}`}
             className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
           />
 
           <Pill
             content={`Capacité : ${currentAnnonce.capacity}`}
-            className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
-          />
-
-          <Pill
-            content={`Nombre de chambres : ${currentAnnonce.rooms}`}
             className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
           />
 
@@ -82,18 +88,18 @@ const Annonce = () => {
 
           <Pill
             content={`${
-              currentAnnonce.smokersAllowed ? "Fumeurs acceptés" : "Fumeurs non acceptés"
+              currentAnnonce.smokingAllowed ? "Fumeurs acceptés" : "Fumeurs non acceptés"
             }`}
             className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
           />
 
           <Pill
-            content={`Heure d'arrivée : ${currentAnnonce.arrivalHour}`}
+            content={`Heure d'arrivée : ${currentAnnonce.arrivalTime}`}
             className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
           />
 
           <Pill
-            content={`Heure de départ : ${currentAnnonce.departureHour}`}
+            content={`Heure de départ : ${currentAnnonce.departureTime}`}
             className="px-3 py-1 my-3 font-bold text-center border border-green-700 rounded-full custom-shadow w-max"
           />
         </div>

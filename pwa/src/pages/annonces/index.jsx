@@ -1,20 +1,15 @@
 import Container from "../../components/Container";
 import AnnonceItem from "../../components/AnnonceItem";
-import { getAnnonces, getFavoriteAnnonces } from "../../fakeAPI";
 import BreadCrumb from "../../components/BreadCrumb";
 import Search from "../../components/Search";
-import { useRouterQuery } from "../../hooks/useRouterQuery";
 import useSWR from "swr";
 import { useLocation } from "react-router-dom";
 
 const Annonces = () => {
-  const data = getAnnonces();
-  const favoriteAnnonces = getFavoriteAnnonces();
-
   const { search } = useLocation();
 
   const { data: initialData, error } = useSWR(
-    `/annonces${search.length > 0 ? search : ""}`
+    `${search.length !== 1 ? `/announce/${search ? search : ""}` : "/announces"}`
   );
 
   return (
@@ -47,16 +42,8 @@ const Annonces = () => {
             Désolé, mais aucune annonce ne correspond à vos critères de recherche
           </div>
         ) : (
-          data.map((annonceData, index) => (
-            <AnnonceItem
-              key={index}
-              initialData={{
-                ...annonceData,
-                isFavorite: favoriteAnnonces.some(
-                  (annonce) => annonce.id === annonceData.id
-                ),
-              }}
-            />
+          initialData.map((annonceData, index) => (
+            <AnnonceItem key={index} initialData={annonceData} />
           ))
         )}
       </Container>

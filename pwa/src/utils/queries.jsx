@@ -1,10 +1,8 @@
 import { useMemo } from "react";
-
 import axios from "axios";
-
 import { SWRConfig } from "swr";
 
-export function createFetcher(instance) {
+export const createFetcher = (instance) => {
   return async function fetcher(url, config = {}) {
     try {
       const response = await instance({
@@ -16,13 +14,13 @@ export function createFetcher(instance) {
       throw Error(error);
     }
   };
-}
+};
 
 const baseConfig = {
   provider: () => new Map(),
 };
 
-export function APIProvider({ children, api }) {
+export const APIProvider = ({ children, api }) => {
   const config = useMemo(() => {
     if (api) {
       const instance = axios.create({
@@ -40,4 +38,4 @@ export function APIProvider({ children, api }) {
   if (!config) return null;
 
   return <SWRConfig value={config}>{children}</SWRConfig>;
-}
+};

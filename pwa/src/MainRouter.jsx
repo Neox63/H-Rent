@@ -6,6 +6,7 @@ import Annonce from "./pages/annonces/[id]";
 import FavoriteAnnonces from "./pages/favorites";
 import Home from "./pages/home";
 import Login from "./pages/login";
+import NotFound from "./pages/notFound";
 import Profil from "./pages/profil";
 import Requests from "./pages/reservation-requests";
 /* import Page404 from "./pages/page-404"; */
@@ -16,9 +17,6 @@ const MainRouter = () => {
       <Route exact path="/">
         <Home />
       </Route>
-      {/* <Route path="*">
-        <Page404 />
-      </Route> */}
 
       <Route exact path="/annonces">
         <Annonces />
@@ -47,6 +45,10 @@ const MainRouter = () => {
       <PrivateRoute exact path="/reservation-request">
         <Requests />
       </PrivateRoute>
+
+      <Route path="*">
+        <NotFound />
+      </Route>
     </Switch>
   );
 };

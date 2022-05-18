@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const AnnonceItem = ({ initialData }) => {
   return (
     <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">
-      <img
+      {/* <img
         src={
           initialData.images.length > 0
             ? URL.createObjectURL(initialData.images[0])
@@ -11,24 +11,17 @@ const AnnonceItem = ({ initialData }) => {
         }
         alt=""
         className="w-full h-64 md:w-2/5 md:h-auto md:rounded-lg"
-      />
+      /> */}
       <div className="flex flex-col justify-between w-full p-4">
         <div className="flex flex-col">
           <div className="flex justify-between mb-4 text-xl font-semibold">
             <div>
               <Link to={`/annonce/${initialData.id}`}>{initialData.title}</Link>
             </div>
-            <div>
-              {initialData.isFavorite ? (
-                <i className="justify-end text-red-500 cursor-pointer fas fa-heart hover:text-black"></i>
-              ) : (
-                <i className="justify-end cursor-pointer far fa-heart hover:text-red-500"></i>
-              )}
-            </div>
           </div>
           <div>
-            {initialData.type} · {initialData.capacity} pers. · {initialData.rooms} ch. ·{" "}
-            {initialData.country}
+            {initialData.idTypeLogement} · {initialData.capacity} pers. ·{" "}
+            {initialData.city}
           </div>
         </div>
 

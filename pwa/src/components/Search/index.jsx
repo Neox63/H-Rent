@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { getAnnonces } from "../../fakeAPI";
 import useSWR from "swr";
 
@@ -19,17 +19,16 @@ const Search = () => {
   const annonces = getAnnonces();
 
   const handleResearch = () => {
-    history.push(
-      `/annonces${
-        title && country
-          ? `?title=${title}&country=${country}`
-          : title && !country
-          ? `?title=${title}`
-          : country && !title
-          ? `?country=${country}`
-          : ""
-      }`
-    );
+    const urlParams = new URLSearchParams();
+    title && urlParams.append("title", title);
+    country && urlParams.append("city", country);
+    maxPriceFilter && urlParams.append("price", maxPriceFilter);
+    capacityFilter !== "1" && urlParams.append("capacity", capacityFilter);
+
+    history.push({
+      pathname: "/annonces",
+      search: "?" + urlParams.toString(),
+    });
   };
 
   const { data, isValidating } = useSWR(
@@ -55,6 +54,7 @@ const Search = () => {
           type="text"
           name="location"
           id="location"
+          autoComplete="no"
           placeholder="Saisissez une ville ou un code postal"
           value={country}
           onChange={(e) => {
@@ -118,7 +118,7 @@ const Search = () => {
       {displayFilters ? (
         <div className="flex flex-col items-center justify-center gap-4 mb-8 filters">
           <div className="flex flex-col items-center justify-center">
-            <label for="capacity">Capacité</label>
+            <label htmlFor="capacity">Capacité</label>
             <input
               name="capacity"
               id="capacity"

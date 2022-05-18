@@ -20,6 +20,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 2,
@@ -42,6 +44,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 3,
@@ -62,10 +66,10 @@ const annonces = [
     smokersAllowed: true,
     arrivalHour: "10:00",
     departureHour: "12:00",
-    startDate: new Date().toLocaleString(),
-    endDate: new Date().toLocaleString(),
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 4,
@@ -88,6 +92,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 5,
@@ -110,6 +116,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
 ];
 
@@ -158,5 +166,10 @@ export const getReservationRequest = () =>
       idUser: userReservationRequest.find((req) => req.idAnnonce === annonce.id).idUser,
     }));
 
-export const addReservation = ({ idAnnonce, idUser }) =>
-  userReservationRequest.push({ idAnnonce: idAnnonce, idUser: idUser });
+export const addReservation = ({ idAnnonce, idUser, startDate, endDate }) =>
+  userReservationRequest.push({
+    idAnnonce: idAnnonce,
+    idUser: idUser,
+    startDate: startDate,
+    endDate: endDate,
+  });

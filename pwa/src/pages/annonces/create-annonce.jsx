@@ -1,10 +1,12 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
 import BreadCrumb from "../../components/BreadCrumb";
 import ImageGallery from "../../components/ImageGallery";
 import Separator from "../../components/Separator";
 import { addAnnonce } from "../../fakeAPI";
+import { convertDateToAPIFormat } from "../../utils/date";
 
 const CreateAnnonce = () => {
   const [title, setTitle] = useState("");
@@ -24,6 +26,14 @@ const CreateAnnonce = () => {
   const [type, setType] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [images, setImages] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(null);
+
+  const onChange = (dates) => {
+    const [start, end] = dates;
+    setStartDate(start);
+    setEndDate(end);
+  };
 
   const [query, setQuery] = useState("");
 
@@ -55,6 +65,8 @@ const CreateAnnonce = () => {
       arrivalHour: arrivalHour,
       departureHour: departureHour,
       images: Array.from(images),
+      startDate: convertDateToAPIFormat(startDate),
+      endDate: convertDateToAPIFormat(endDate),
     });
 
     history.push("/");
@@ -86,6 +98,7 @@ const CreateAnnonce = () => {
               </span>
               <input
                 multiple
+                required
                 accept="image/*"
                 name="file"
                 id="file"
@@ -101,6 +114,23 @@ const CreateAnnonce = () => {
                 Cliquez pour ajouter des images
               </label>
               {images.length > 0 && <ImageGallery images={Array.from(images)} />}
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-8 text-lg font-bold">
+                Indiquez la plage de disponibilité du bien
+              </span>
+
+              <DatePicker
+                required
+                selected={startDate}
+                onChange={onChange}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                selectsDisabledDaysInRange
+                inline
+              />
             </div>
 
             <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
@@ -231,7 +261,7 @@ const CreateAnnonce = () => {
                   </label>
                   <input
                     name="arrival"
-                    className="px-4 bg-green-400 rounded-md"
+                    className="px-4 text-white bg-green-700 rounded-md"
                     onChange={(e) => setArrivalHour(e.target.value)}
                     type="time"
                     min="6:00"
@@ -246,7 +276,7 @@ const CreateAnnonce = () => {
                   </label>
                   <input
                     name="departure"
-                    className="px-4 bg-green-400 rounded-md"
+                    className="px-4 text-white bg-green-700 rounded-md"
                     onChange={(e) => setDepartureHour(e.target.value)}
                     type="time"
                     min="6:00"
@@ -319,7 +349,7 @@ const CreateAnnonce = () => {
                     setCountry(e.target.value);
                     setQuery(e.target.value);
                   }}
-                  className="relative w-1/2 px-4 py-2 bg-gray-100 rounded-lg"
+                  className="relative w-1/2 px-4 py-2 bg-gray-100 border rounded-lg"
                 />
                 <ul
                   className={`absolute w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}

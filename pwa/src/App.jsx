@@ -8,7 +8,7 @@ import { APIProvider } from "./utils/queries";
 
 const App = () => {
   return (
-    <APIProvider api={"http://localhost:3000/api"}>
+    <APIProvider api={"http://localhost:8080/api"}>
       <UserProvider>
         <Router>
           <Switch>
