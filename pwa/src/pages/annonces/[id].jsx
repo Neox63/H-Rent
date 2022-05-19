@@ -56,7 +56,7 @@ const Annonce = () => {
         />
       )}
 
-      {/* <ImageGallery
+      <ImageGallery
         withUrl
         images={Array.from([
           currentAnnonce?.locationPrimaryPicture,
@@ -65,7 +65,7 @@ const Annonce = () => {
           currentAnnonce?.locationFourthPicture,
           currentAnnonce?.locationFifthPicture,
         ])}
-      /> */}
+      />
       <div className="mt-8 mb-4 text-3xl font-extrabold">{currentAnnonce?.title}</div>
       <div className="mb-4">
         {typeLogement?.libelle} · {currentAnnonce?.capacity} pers. ·{" "}
@@ -80,8 +80,6 @@ const Annonce = () => {
       <div>
         Disponible du {currentAnnonce?.startDate} au {currentAnnonce?.endDate}
       </div>
-
-      <div className="text-sm">{currentAnnonce?.createdDate}</div>
 
       <button onClick={() => setReservationModalOpen(true)} className="mt-4 Button">
         Réserver le bien
