@@ -5,10 +5,12 @@ import Login from "./pages/login";
 import { UserProvider } from "./providers/user";
 import MainRouter from "./MainRouter";
 import { APIProvider } from "./utils/queries";
+import "dotenv/config";
+import { API_BASE_URL } from "./utils/constant";
 
 const App = () => {
   return (
-    <APIProvider api={process.env.API_URL || "http://localhost:8080/api"}>
+    <APIProvider api={API_BASE_URL || "http://localhost:8080/api"}>
       <UserProvider>
         <Router>
           <Switch>
