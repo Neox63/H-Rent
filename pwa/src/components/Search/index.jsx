@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { getAnnonces } from "../../fakeAPI";
 import useSWR from "swr";
 
@@ -22,7 +22,8 @@ const Search = () => {
     const urlParams = new URLSearchParams();
     title && urlParams.append("title", title);
     country && urlParams.append("city", country);
-    maxPriceFilter && urlParams.append("price", maxPriceFilter);
+    maxPriceFilter && urlParams.append("maxPrice", maxPriceFilter);
+    minPriceFilter && urlParams.append("minPrice", minPriceFilter);
     capacityFilter !== "1" && urlParams.append("capacity", capacityFilter);
 
     history.push({

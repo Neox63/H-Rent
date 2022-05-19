@@ -1,6 +1,16 @@
 import { Link } from "react-router-dom";
+import useSWR from "swr";
 
 const AnnonceItem = ({ initialData }) => {
+  const { data: typeLogement } = useSWR(
+    initialData ? `/typeLogement/${initialData.idTypeLogement}` : null,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
   return (
     <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">
       {/* <img
@@ -20,8 +30,7 @@ const AnnonceItem = ({ initialData }) => {
             </div>
           </div>
           <div>
-            {initialData.idTypeLogement} · {initialData.capacity} pers. ·{" "}
-            {initialData.city}
+            {typeLogement?.libelle} · {initialData.capacity} pers. · {initialData.city}
           </div>
         </div>
 

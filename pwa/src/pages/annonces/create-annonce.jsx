@@ -5,8 +5,8 @@ import useSWR from "swr";
 import BreadCrumb from "../../components/BreadCrumb";
 import ImageGallery from "../../components/ImageGallery";
 import Separator from "../../components/Separator";
-import { addAnnonce } from "../../fakeAPI";
 import { convertDateToAPIFormat } from "../../utils/date";
+import axios from "axios";
 
 const CreateAnnonce = () => {
   const [title, setTitle] = useState("");
@@ -14,7 +14,7 @@ const CreateAnnonce = () => {
   const [price, setPrice] = useState("");
   const [country, setCountry] = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [bail, setBail] = useState("");
+  const [caution, setCaution] = useState("");
   const [availablePlaces, setAvailablePlaces] = useState(1);
   const [cniNeeded, setCNINeeded] = useState(false);
   const [passeportNeeded, setPasseportNeeded] = useState(false);
@@ -23,19 +23,14 @@ const CreateAnnonce = () => {
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [arrivalHour, setArrivalHour] = useState("");
   const [departureHour, setDepartureHour] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(1);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [images, setImages] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
-
-  const onChange = (dates) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
-  };
-
   const [query, setQuery] = useState("");
+
+  const history = useHistory();
 
   const { data, isValidating } = useSWR(
     query.length > 0
@@ -43,31 +38,43 @@ const CreateAnnonce = () => {
       : null
   );
 
-  const history = useHistory();
+  const { data: typesLogement } = useSWR("/typeLogements");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    addAnnonce({
-      title: title,
-      type: type,
-      description: description,
-      price: price,
-      country: country,
-      zipCode: zipCode,
-      capacity: availablePlaces,
-      bail: bail,
-      cniNeeded: cniNeeded,
-      passeportNeeded: passeportNeeded,
-      justificatifNeeded: justificatifNeeded,
-      smokersAllowed: smokersAllowed,
-      petsAllowed: petsAllowed,
-      arrivalHour: arrivalHour,
-      departureHour: departureHour,
-      images: Array.from(images),
-      startDate: convertDateToAPIFormat(startDate),
-      endDate: convertDateToAPIFormat(endDate),
-    });
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("city", country);
+    formData.append("postalCode", zipCode);
+    formData.append("idUser", 1);
+    formData.append("caution", caution);
+    formData.append("capacity", availablePlaces);
+    formData.append("startDate", convertDateToAPIFormat(startDate));
+    formData.append("endDate", convertDateToAPIFormat(endDate));
+    formData.append("idTypeLogement", 2);
+    formData.append("isIdCardRequired", cniNeeded);
+    formData.append("isSmokingAllowed", smokersAllowed);
+    formData.append("isPetsAllowed", petsAllowed);
+    formData.append("isPassportRequired", passeportNeeded);
+    formData.append("isProofOfAddressRequired", justificatifNeeded);
+    formData.append("arrivalTime", arrivalHour + ":00");
+    formData.append("departureTime", departureHour + ":00");
+    formData.append("telephoneNumber", phoneNumber);
+    formData.append("files", ...Array.from(images));
+
+    axios
+      .post("http://localhost:8080/api/announce/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     history.push("/");
   };
@@ -124,7 +131,11 @@ const CreateAnnonce = () => {
               <DatePicker
                 required
                 selected={startDate}
-                onChange={onChange}
+                onChange={(dates) => {
+                  const [start, end] = dates;
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
                 startDate={startDate}
                 endDate={endDate}
                 selectsRange
@@ -143,15 +154,14 @@ const CreateAnnonce = () => {
                 id="type"
                 className="p-2 mt-2 mb-4 bg-gray-100 border rounded-md"
                 required
+                value={type}
                 onChange={(e) => setType(e.target.value)}
               >
-                <option value="Appartement">Appartement</option>
-                <option value="Chalet">Chalet</option>
-                <option value="Chambre">Chambre</option>
-                <option value="Chateau">Chateau</option>
-                <option value="Villa">Villa</option>
-                <option value="Studio">Studio</option>
-                <option value="Autre">Autre</option>
+                {typesLogement?.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.libelle}
+                  </option>
+                ))}
               </select>
 
               <div className="flex justify-around my-4">
@@ -328,8 +338,8 @@ const CreateAnnonce = () => {
                 min={0}
                 max={price}
                 className="p-2 my-4 bg-gray-100 border rounded-md"
-                value={bail}
-                onChange={(e) => setBail(e.target.value)}
+                value={caution}
+                onChange={(e) => setCaution(e.target.value)}
                 placeholder="Montant de la caution"
                 required
                 aria-required="true"
