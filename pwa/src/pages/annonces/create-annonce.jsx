@@ -1,7 +1,12 @@
 import { useState } from "react";
+import DatePicker from "react-datepicker";
 import { useHistory } from "react-router-dom";
+import useSWR from "swr";
 import BreadCrumb from "../../components/BreadCrumb";
-import { addAnnonce } from "../../fakeAPI";
+import ImageGallery from "../../components/ImageGallery";
+import Separator from "../../components/Separator";
+import { convertDateToAPIFormat } from "../../utils/date";
+import axios from "axios";
 
 const CreateAnnonce = () => {
   const [title, setTitle] = useState("");
@@ -9,9 +14,8 @@ const CreateAnnonce = () => {
   const [price, setPrice] = useState("");
   const [country, setCountry] = useState("");
   const [zipCode, setZipCode] = useState("");
-  const [bail, setBail] = useState("");
+  const [caution, setCaution] = useState("");
   const [availablePlaces, setAvailablePlaces] = useState(1);
-  const [availableRooms, setAvailableRooms] = useState(1);
   const [cniNeeded, setCNINeeded] = useState(false);
   const [passeportNeeded, setPasseportNeeded] = useState(false);
   const [justificatifNeeded, setJustificatifNeeded] = useState(false);
@@ -19,31 +23,58 @@ const CreateAnnonce = () => {
   const [petsAllowed, setPetsAllowed] = useState(false);
   const [arrivalHour, setArrivalHour] = useState("");
   const [departureHour, setDepartureHour] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState(1);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [images, setImages] = useState([]);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(null);
+  const [query, setQuery] = useState("");
 
   const history = useHistory();
+
+  const { data, isValidating } = useSWR(
+    query.length > 0
+      ? `https://api-adresse.data.gouv.fr/search/?q=${query}&limit=5`
+      : null
+  );
+
+  const { data: typesLogement } = useSWR("/typeLogements");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    addAnnonce({
-      title: title,
-      type: type,
-      description: description,
-      price: price,
-      country: country,
-      zipCode: zipCode,
-      capacity: availablePlaces,
-      rooms: availableRooms,
-      bail: bail,
-      cniNeeded: cniNeeded,
-      passeportNeeded: passeportNeeded,
-      justificatifNeeded: justificatifNeeded,
-      smokersAllowed: smokersAllowed,
-      petsAllowed: petsAllowed,
-      arrivalHour: arrivalHour,
-      departureHour: departureHour,
-    });
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("price", price);
+    formData.append("city", country);
+    formData.append("postalCode", zipCode);
+    formData.append("idUser", 1);
+    formData.append("caution", caution);
+    formData.append("capacity", availablePlaces);
+    formData.append("startDate", convertDateToAPIFormat(startDate));
+    formData.append("endDate", convertDateToAPIFormat(endDate));
+    formData.append("idTypeLogement", 2);
+    formData.append("isIdCardRequired", cniNeeded);
+    formData.append("isSmokingAllowed", smokersAllowed);
+    formData.append("isPetsAllowed", petsAllowed);
+    formData.append("isPassportRequired", passeportNeeded);
+    formData.append("isProofOfAddressRequired", justificatifNeeded);
+    formData.append("arrivalTime", arrivalHour + ":00");
+    formData.append("departureTime", departureHour + ":00");
+    formData.append("telephoneNumber", phoneNumber);
+    formData.append("files", ...Array.from(images));
+
+    axios
+      .post("http://localhost:8080/api/announce/create", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
 
     history.push("/");
   };
@@ -53,15 +84,9 @@ const CreateAnnonce = () => {
       <BreadCrumb links={[{ url: "/create", label: "Créer une annonce" }]} />
       <div className="my-8 text-2xl font-extrabold text-center">Déposer une annonce</div>
       <div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} encType="multipart/form-data">
           <div className="flex flex-col w-2/3 gap-8 mx-auto">
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="text-lg font-bold">Commençons par un titre !</span>
               <input
                 type="text"
@@ -74,37 +99,74 @@ const CreateAnnonce = () => {
               />
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-4 text-lg font-bold">
+                Ajoutez des images à votre annonce (5 maximum)
+              </span>
+              <input
+                multiple
+                required
+                accept="image/*"
+                name="file"
+                id="file"
+                type="file"
+                onChange={(e) =>
+                  e.target.files.length <= 5
+                    ? setImages(e.target.files)
+                    : alert("Vous ne pouvez pas déposer plus de 5 images à la fois !")
+                }
+                className="hidden"
+              />
+              <label htmlFor="file" className="mx-auto cursor-pointer Button w-max">
+                Cliquez pour ajouter des images
+              </label>
+              {images.length > 0 && <ImageGallery images={Array.from(images)} />}
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-8 text-lg font-bold">
+                Indiquez la plage de disponibilité du bien
+              </span>
+
+              <DatePicker
+                required
+                selected={startDate}
+                onChange={(dates) => {
+                  const [start, end] = dates;
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+                startDate={startDate}
+                endDate={endDate}
+                selectsRange
+                selectsDisabledDaysInRange
+                inline
+              />
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">
                 Dites nous en plus sur votre bien
               </span>
-
               <span className="font-bold ">Type d'hébergement</span>
               <select
                 name="type"
                 id="type"
                 className="p-2 mt-2 mb-4 bg-gray-100 border rounded-md"
                 required
+                value={type}
                 onChange={(e) => setType(e.target.value)}
               >
-                <option value="Appartement">Appartement</option>
-                <option value="Chalet">Chalet</option>
-                <option value="Chambre">Chambre</option>
-                <option value="Chateau">Chateau</option>
-                <option value="Villa">Villa</option>
-                <option value="Studio">Studio</option>
-                <option value="Autre">Autre</option>
+                {typesLogement?.map((type) => (
+                  <option key={type.id} value={type.id}>
+                    {type.libelle}
+                  </option>
+                ))}
               </select>
 
               <div className="flex justify-around my-4">
                 <div className="flex flex-col items-center justify-center mb-6 available-bed">
-                  <span className="font-bold">
+                  <span className="mb-4 font-bold">
                     Capacité de l'hébergement (nombre de couchages)
                   </span>
                   <div className="flex">
@@ -115,7 +177,7 @@ const CreateAnnonce = () => {
                         )
                       }
                       type="button"
-                      className="px-2 bg-green-500 rounded-lg "
+                      className="Button"
                     >
                       -
                     </button>
@@ -125,42 +187,15 @@ const CreateAnnonce = () => {
                         setAvailablePlaces((availablePlaces) => availablePlaces + 1)
                       }
                       type="button"
-                      className="px-2 bg-green-500 rounded-lg "
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex flex-col items-center justify-center mb-6 available-bed">
-                  <span className="font-bold">Nombre de chambres</span>
-                  <div className="flex">
-                    <button
-                      onClick={() =>
-                        setAvailableRooms((availablePlaces) =>
-                          availablePlaces < 1 ? 0 : availablePlaces - 1
-                        )
-                      }
-                      type="button"
-                      className="px-2 bg-green-500 rounded-lg "
-                    >
-                      -
-                    </button>
-                    <span className="mx-4 my-auto ">{availableRooms}</span>
-                    <button
-                      onClick={() =>
-                        setAvailableRooms((availablePlaces) => availablePlaces + 1)
-                      }
-                      type="button"
-                      className="px-2 bg-green-500 rounded-lg "
+                      className="Button"
                     >
                       +
                     </button>
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col items-center mb-4 requiredDocuments">
+              <Separator />
+              <div className="flex flex-col items-center my-4 requiredDocuments">
                 <span className="mb-4 text-lg font-bold">
                   Documents à fournir par le locataire lors de la réservation
                 </span>
@@ -203,7 +238,7 @@ const CreateAnnonce = () => {
                   </div>
                 </div>
               </div>
-
+              <Separator />
               <div className="flex items-center justify-center gap-4 my-4">
                 <div>
                   <input
@@ -236,7 +271,7 @@ const CreateAnnonce = () => {
                   </label>
                   <input
                     name="arrival"
-                    className="px-4 bg-green-400 rounded-md"
+                    className="px-4 text-white bg-green-700 rounded-md"
                     onChange={(e) => setArrivalHour(e.target.value)}
                     type="time"
                     min="6:00"
@@ -251,7 +286,7 @@ const CreateAnnonce = () => {
                   </label>
                   <input
                     name="departure"
-                    className="px-4 bg-green-400 rounded-md"
+                    className="px-4 text-white bg-green-700 rounded-md"
                     onChange={(e) => setDepartureHour(e.target.value)}
                     type="time"
                     min="6:00"
@@ -262,13 +297,7 @@ const CreateAnnonce = () => {
               </div>
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">Décrivez votre bien !</span>
               <textarea
                 type="text"
@@ -276,7 +305,8 @@ const CreateAnnonce = () => {
                 className="p-2 bg-gray-100 border rounded-md"
                 value={description}
                 onChange={(e) =>
-                  description.length < 3000 && setDescription(e.target.value)
+                  (description.length < 3000 || description.length < e.target.value) &&
+                  setDescription(e.target.value)
                 }
                 placeholder="Description de votre annonce, attention, elle est limite à 3000 caractères !"
                 required
@@ -287,13 +317,7 @@ const CreateAnnonce = () => {
               </span>
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">
                 Parlons argent, quel est votre prix ?
               </span>
@@ -314,32 +338,78 @@ const CreateAnnonce = () => {
                 min={0}
                 max={price}
                 className="p-2 my-4 bg-gray-100 border rounded-md"
-                value={bail}
-                onChange={(e) => setBail(e.target.value)}
+                value={caution}
+                onChange={(e) => setCaution(e.target.value)}
                 placeholder="Montant de la caution"
                 required
                 aria-required="true"
               />
             </div>
 
-            <div
-              style={{
-                boxShadow:
-                  "0 -1px 4px 0 rgb(26 26 26 / 8%), 0 4px 8px 0 rgb(26 26 26 / 12%)",
-              }}
-              className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md"
-            >
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="mb-8 text-lg font-bold">Où se situe votre bien ?</span>
-              <div className="flex gap-2 my-4">
+              <div className="relative flex gap-2 my-4">
                 <input
                   type="text"
-                  className="w-2/3 p-2 bg-gray-100 border rounded-md"
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
+                  name="location"
+                  id="location"
                   placeholder="Ville"
-                  required
-                  aria-required="true"
+                  value={country}
+                  onChange={(e) => {
+                    setCountry(e.target.value);
+                    setQuery(e.target.value);
+                  }}
+                  className="relative w-1/2 px-4 py-2 bg-gray-100 border rounded-lg"
                 />
+                <ul
+                  className={`absolute w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}
+                >
+                  {isValidating ? (
+                    <li className="py-4 text-2xl text-center text-red-500">
+                      <i className="fa fa-circle-notch fa-spin"></i>
+                    </li>
+                  ) : (
+                    <>
+                      {data?.features.length > 0 ? (
+                        <>
+                          {data?.features?.map((currCountry) => (
+                            <li
+                              onClick={() => {
+                                setQuery("");
+                                setCountry(currCountry?.properties?.label);
+                                setZipCode(currCountry?.properties?.postcode);
+                              }}
+                              className="flex flex-col px-8 py-4 cursor-pointer hover:bg-gray-200"
+                            >
+                              <span>
+                                {currCountry?.properties?.label} -{" "}
+                                {currCountry?.properties?.postcode}
+                              </span>
+                              <span className="text-sm text-gray-400">
+                                {currCountry?.properties?.context}
+                              </span>
+                            </li>
+                          ))}
+                        </>
+                      ) : (
+                        query.length > 0 && (
+                          <li className="px-8 py-4 text-center">
+                            <span>
+                              Aucun résultat{" "}
+                              <span>
+                                pour "
+                                <span className={`font-bold text-green-700`}>
+                                  {query}
+                                </span>
+                                "
+                              </span>
+                            </span>
+                          </li>
+                        )
+                      )}
+                    </>
+                  )}
+                </ul>
                 <input
                   type="text"
                   className="w-1/3 p-2 bg-gray-100 border rounded-md"
@@ -350,6 +420,19 @@ const CreateAnnonce = () => {
                   aria-required="true"
                 />
               </div>
+            </div>
+
+            <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
+              <span className="mb-8 text-lg font-bold">Contact de l'hôte</span>
+              <input
+                type="text"
+                className="w-1/3 p-2 bg-gray-100 border rounded-md"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                placeholder="Votre numéro de téléphone"
+                required
+                aria-required="true"
+              />
             </div>
 
             <button className="w-2/3 mx-auto Button" type="submit">

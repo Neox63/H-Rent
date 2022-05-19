@@ -8,6 +8,7 @@ const annonces = [
     country: "Clermont-Ferrand",
     zipcode: "63000",
     capacity: 2,
+    images: [],
     rooms: 1,
     bail: "145",
     cniNeeded: true,
@@ -19,6 +20,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 2,
@@ -29,6 +32,7 @@ const annonces = [
     country: "Clermont-Ferrand",
     zipcode: "63000",
     capacity: 2,
+    images: [],
     rooms: 1,
     bail: "145",
     cniNeeded: true,
@@ -40,6 +44,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 3,
@@ -50,6 +56,7 @@ const annonces = [
     country: "Clermont-Ferrand",
     zipcode: "63000",
     capacity: 2,
+    images: [],
     rooms: 1,
     bail: "145",
     cniNeeded: true,
@@ -61,6 +68,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 4,
@@ -71,6 +80,7 @@ const annonces = [
     country: "Clermont-Ferrand",
     zipcode: "63000",
     capacity: 2,
+    images: [],
     rooms: 1,
     bail: "145",
     cniNeeded: true,
@@ -82,6 +92,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
   {
     id: 5,
@@ -92,6 +104,7 @@ const annonces = [
     country: "Clermont-Ferrand",
     zipcode: "63000",
     capacity: 2,
+    images: [],
     rooms: 1,
     bail: "145",
     cniNeeded: true,
@@ -103,6 +116,8 @@ const annonces = [
     departureHour: "12:00",
     createdAt: new Date().toLocaleString(),
     tel: "0698246165",
+    startDate: "18-05-2022",
+    endDate: "25-05-2022",
   },
 ];
 
@@ -151,5 +166,10 @@ export const getReservationRequest = () =>
       idUser: userReservationRequest.find((req) => req.idAnnonce === annonce.id).idUser,
     }));
 
-export const addReservation = ({ idAnnonce, idUser }) =>
-  userReservationRequest.push({ idAnnonce: idAnnonce, idUser: idUser });
+export const addReservation = ({ idAnnonce, idUser, startDate, endDate }) =>
+  userReservationRequest.push({
+    idAnnonce: idAnnonce,
+    idUser: idUser,
+    startDate: startDate,
+    endDate: endDate,
+  });

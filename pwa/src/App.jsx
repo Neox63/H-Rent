@@ -4,20 +4,11 @@ import Navbar from "./components/Navbar";
 import Login from "./pages/login";
 import { UserProvider } from "./providers/user";
 import MainRouter from "./MainRouter";
-import { QueryClient, QueryClientProvider } from "react-query";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnwindowFocus: false,
-      retry: 0,
-    },
-  },
-});
+import { APIProvider } from "./utils/queries";
 
 const App = () => {
   return (
-    <QueryClientProvider client={queryClient}>
+    <APIProvider api={process.env.API_URL || "http://localhost:8080/api"}>
       <UserProvider>
         <Router>
           <Switch>
@@ -37,7 +28,7 @@ const App = () => {
           </Switch>
         </Router>
       </UserProvider>
-    </QueryClientProvider>
+    </APIProvider>
   );
 };
 

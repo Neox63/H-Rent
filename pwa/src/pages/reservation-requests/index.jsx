@@ -7,12 +7,8 @@ const Requests = () => {
 
   return (
     <>
-      <BreadCrumb
-        links={[{ url: "/reservation-request", label: "Mes demandes" }]}
-      />
-      <div className="my-8 text-2xl">
-        Demandes de réservation ({initialData.length})
-      </div>
+      <BreadCrumb links={[{ url: "/reservation-request", label: "Mes demandes" }]} />
+      <div className="my-8 text-2xl">Demandes de réservation ({initialData.length})</div>
       {initialData.map((request, index) => {
         const currentUser = getUser(request.idUser);
         return (
@@ -21,8 +17,12 @@ const Requests = () => {
             key={index}
           >
             <div>
-              Demande de réservation par {currentUser.firstname}{" "}
-              {currentUser.lastname} pour {request.annonce.title}
+              Demande de réservation par {currentUser.firstname} {currentUser.lastname}{" "}
+              pour {request.annonce.title}
+            </div>
+
+            <div>
+              Du : {request.startDate} au {request.endDate}
             </div>
             <Link className="text-black" to={`/annonce/${request.annonce.id}`}>
               Lien vers l'annonce
