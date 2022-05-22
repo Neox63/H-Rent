@@ -9,8 +9,9 @@ import Loader from "../../components/Loader";
 
 import useSWR from "swr";
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "../../providers/user";
+import { convertDateToAPIFormat } from "../../utils/date";
 
 const Annonce = () => {
   const { id } = useParams();
@@ -18,7 +19,12 @@ const Annonce = () => {
 
   const [reservationModalOpen, setReservationModalOpen] = useState(false);
 
-  const { data: currentAnnonce, error } = useSWR(`/announce/${id}`);
+  const { data: currentAnnonce, error } = useSWR(`/announce/${id}`, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
+
   const { data: typeLogement } = useSWR(
     currentAnnonce ? `/typeLogement/${currentAnnonce?.idTypeLogement}` : null,
     {
@@ -78,7 +84,8 @@ const Annonce = () => {
       </div>
 
       <div>
-        Disponible du {currentAnnonce?.startDate} au {currentAnnonce?.endDate}
+        Disponible du {convertDateToAPIFormat(currentAnnonce?.startDate)} au{" "}
+        {convertDateToAPIFormat(currentAnnonce?.endDate)}
       </div>
 
       <button onClick={() => setReservationModalOpen(true)} className="mt-4 Button">

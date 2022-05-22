@@ -1,43 +1,52 @@
-import { Link } from "react-router-dom";
+import axios from "axios";
+import useSWR from "swr";
 import BreadCrumb from "../../components/BreadCrumb";
-import { getReservationRequest, getUser } from "../../fakeAPI";
+import Request from "../../components/Request";
+import { useUser } from "../../providers/user";
 
 const Requests = () => {
-  const initialData = getReservationRequest();
+  const { user } = useUser();
+
+  const { data, error } = useSWR(
+    `http://localhost:8080/api/reservation/getAwaitingByUser/${user.id}`,
+    {
+      revalidateIfStale: false,
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+
+  const acceptRequest = (requestId) => {
+    axios.put(`http://localhost:8080/api/reservation/accept/${requestId}`);
+  };
+
+  const declineRequest = (requestId) => {
+    axios.put(`http://localhost:8080/api/reservation/decline/${requestId}`);
+  };
 
   return (
     <>
       <BreadCrumb links={[{ url: "/reservation-request", label: "Mes demandes" }]} />
-      <div className="my-8 text-2xl">Demandes de réservation ({initialData.length})</div>
-      {initialData.map((request, index) => {
-        const currentUser = getUser(request.idUser);
-        return (
-          <div
-            className="flex flex-col items-center p-2 mb-4 bg-indigo-500 rounded-lg w-max"
-            key={index}
-          >
-            <div>
-              Demande de réservation par {currentUser.firstname} {currentUser.lastname}{" "}
-              pour {request.annonce.title}
-            </div>
 
-            <div>
-              Du : {request.startDate} au {request.endDate}
-            </div>
-            <Link className="text-black" to={`/annonce/${request.annonce.id}`}>
-              Lien vers l'annonce
-            </Link>
-            <div className="flex">
-              <button className="px-4 py-2 mx-2 mt-4 bg-red-600 rounded-lg hover:bg-red-700">
-                Refuser
-              </button>
-              <button className="px-4 py-2 mx-2 mt-4 bg-green-600 rounded-lg hover:bg-green-700">
-                Accepter
-              </button>
-            </div>
+      {error ? (
+        <div className="my-8 text-2xl font-bold text-center text-red-500">
+          Une erreur est survenue lors de la récupération des demandes de réservation
+        </div>
+      ) : (
+        <>
+          <div className="my-8 text-2xl">
+            Demandes de réservation en attente ({data?.length})
           </div>
-        );
-      })}
+          {data?.map((request, index) => (
+            <Request
+              key={index}
+              request={request}
+              onAccept={acceptRequest}
+              onDecline={declineRequest}
+            />
+          ))}
+        </>
+      )}
     </>
   );
 };

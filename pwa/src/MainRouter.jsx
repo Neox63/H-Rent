@@ -9,6 +9,7 @@ import Login from "./pages/login";
 import Page404 from "./pages/page-404";
 import Profil from "./pages/profil";
 import Requests from "./pages/reservation-requests";
+import Reservations from "./pages/reservations";
 
 const MainRouter = () => {
   return (
@@ -43,6 +44,10 @@ const MainRouter = () => {
 
       <PrivateRoute exact path="/reservation-request">
         <Requests />
+      </PrivateRoute>
+
+      <PrivateRoute exact path="/reservations">
+        <Reservations />
       </PrivateRoute>
 
       <Route exact path="/404">

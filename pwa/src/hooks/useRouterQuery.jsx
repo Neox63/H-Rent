@@ -8,16 +8,13 @@ export function useRouterQuery(returnToTop = false) {
   const history = useHistory();
   const { search, pathname } = useLocation();
 
-  //Récupère les query string et les transforme en objet
   const getParams = useMemo(() => {
     return parse(search, { ignoreQueryPrefix: true, depth: 0 });
   }, [search]);
 
-  //Récupère les paramètres ajoutés (objet) et transforme les anciens et nouveaux paramètres en url
   const setParams = (newParams, changeUrl = true) => {
     const allParams = cloneDeep({ ...getParams, ...newParams });
 
-    // Permet la suppression des clés/valeurs vides si empty string
     for (let i = 0; i < Object.values(newParams).length; i++) {
       if (Object.values(newParams)[i] === "") {
         delete allParams[Object.keys(newParams)[i]];
