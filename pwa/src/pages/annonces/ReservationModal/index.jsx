@@ -1,10 +1,11 @@
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 import Separator from "../../../components/Separator";
-import { addReservation } from "../../../fakeAPI";
-import { convertDateToAPIFormat, getDaysBetween } from "../../../utils/date";
 import "react-datepicker/dist/react-datepicker.css";
+import { convertDateToAPIFormat, getDaysBetween } from "../../../utils/date";
+import useSWR from "swr";
 
 const ReservationModal = ({
   currentAnnonce,
@@ -19,6 +20,12 @@ const ReservationModal = ({
   const [endDate, setEndDate] = useState(null);
   const [daysBetween, setDaysBetween] = useState(1);
 
+  const history = useHistory();
+
+  /* const { data: reservedDates } = useSWR(
+    `http://localhost:8080/api/reservation/getAccepted/${idAnnonce}`
+  ); */
+
   const onChange = (dates) => {
     const [start, end] = dates;
     setStartDate(start);
@@ -26,17 +33,24 @@ const ReservationModal = ({
     setDaysBetween(getDaysBetween(start, end));
   };
 
-  const history = useHistory();
-
   const reserve = () => {
-    addReservation({
-      idAnnonce: +idAnnonce,
-      idUser: user.id,
-      startDate: convertDateToAPIFormat(startDate),
-      endDate: convertDateToAPIFormat(endDate),
-    });
+    const formData = new FormData();
+    formData.append("idUser", user.id);
+    formData.append("idAnnounce", idAnnonce);
+    formData.append("startDate", convertDateToAPIFormat(startDate));
+    formData.append("endDate", convertDateToAPIFormat(endDate));
+    formData.append("isAccepted", 3);
 
-    history.push("/");
+    axios
+      .post("http://localhost:8080/api/reservation/create", formData)
+      .then((res) => {
+        console.log(res.status);
+        res.status === 200 && history.push("/reservations");
+      })
+      .catch((err) => {
+        setReservationModalOpen(false);
+        console.log(err);
+      });
   };
 
   return (
@@ -45,8 +59,8 @@ const ReservationModal = ({
         className="fixed inset-0 z-10 bg-gray-900 opacity-75"
         onClick={() => setReservationModalOpen(false)}
       ></div>
-      <div className="fixed inset-0 z-20 flex flex-col items-center justify-center w-2/3 m-auto bg-white rounded-md h-4/5">
-        <div className="w-full px-12 py-4 overflow-scroll text-center ">
+      <div className="fixed inset-0 z-20 flex flex-col items-center justify-center w-5/6 m-auto bg-white rounded-md md:w-2/3 h-4/5">
+        <div className="w-full px-8 py-4 overflow-scroll text-center md:px-12 ">
           <span className="text-2xl font-bold">
             Encore quelques étapes avant de réserver !
           </span>
@@ -60,13 +74,14 @@ const ReservationModal = ({
             </span>
 
             <div className="flex flex-col gap-2 my-8">
-              {currentAnnonce.cniNeeded && (
-                <div className="flex items-center gap-4">
-                  <label className="font-bold" htmlFor="cni-upload">
+              {currentAnnonce.idCardRequired && (
+                <div className="flex items-center justify-between gap-4">
+                  <label className="font-bold text-left" htmlFor="cni-upload">
                     Carte d'identité :{" "}
                   </label>
                   <input
                     accept="image/*"
+                    required
                     name="cni-upload"
                     id="cni-upload"
                     type="file"
@@ -75,13 +90,14 @@ const ReservationModal = ({
                 </div>
               )}
 
-              {currentAnnonce.justificatifNeeded && (
-                <div className="flex items-center gap-4">
-                  <label className="font-bold" htmlFor="justificatif-upload">
+              {currentAnnonce.isProofOfAddressRequired && (
+                <div className="flex items-center justify-between gap-4">
+                  <label className="font-bold text-left" htmlFor="justificatif-upload">
                     Justificatif de domicile :{" "}
                   </label>
                   <input
                     accept="image/*"
+                    required
                     name="justificatif-upload"
                     id="justificatif-upload"
                     type="file"
@@ -90,13 +106,14 @@ const ReservationModal = ({
                 </div>
               )}
 
-              {currentAnnonce.passeportNeeded && (
+              {currentAnnonce.isPassportRequired && (
                 <div className="flex items-center gap-4">
-                  <label className="font-bold" htmlFor="passeport-upload">
+                  <label className="font-bold text-left" htmlFor="passeport-upload">
                     Passeport :{" "}
                   </label>
                   <input
                     accept="image/*"
+                    required
                     name="passeport-upload"
                     id="passeport-upload"
                     type="file"
@@ -114,6 +131,8 @@ const ReservationModal = ({
           </span>
 
           <DatePicker
+            minDate={new Date()}
+            maxDate={new Date(currentAnnonce.endDate) - 1}
             selected={startDate}
             onChange={onChange}
             startDate={startDate}

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
-import { getAnnonces } from "../../fakeAPI";
 import useSWR from "swr";
 
 const Search = () => {
@@ -15,8 +14,6 @@ const Search = () => {
   const [displayFilters, setDisplayFilters] = useState(false);
 
   const history = useHistory();
-
-  const annonces = getAnnonces();
 
   const handleResearch = () => {
     const urlParams = new URLSearchParams();
@@ -39,8 +36,8 @@ const Search = () => {
   );
 
   return (
-    <div className="flex flex-col w-2/3 px-4 py-8 mx-auto bg-white rounded-md custom-shadow">
-      <div className="relative flex gap-4">
+    <div className="flex flex-col w-full px-4 py-8 mx-auto bg-white rounded-md md:1/2 lg:w-2/3 custom-shadow">
+      <div className="relative flex flex-col gap-4 md:flex-row">
         <input
           type="text"
           name="title"
@@ -48,24 +45,24 @@ const Search = () => {
           placeholder="Que recherchez-vous ?"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          className="w-1/2 px-4 py-2 bg-gray-100 rounded-lg"
+          className="px-4 py-2 bg-gray-100 rounded-lg md:w-1/2"
         />
 
         <input
           type="text"
           name="location"
           id="location"
-          autoComplete="no"
           placeholder="Saisissez une ville ou un code postal"
+          autoComplete="off"
           value={country}
           onChange={(e) => {
             setCountry(e.target.value);
             setQuery(e.target.value);
           }}
-          className="relative w-1/2 px-4 py-2 bg-gray-100 rounded-lg"
+          className="relative px-4 py-2 bg-gray-100 rounded-lg md:w-1/2"
         />
         <ul
-          className={`absolute right-0 w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}
+          className={`absolute right-0 w-full md:w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}
         >
           {isValidating ? (
             <li className="py-4 text-2xl text-center text-red-500">
@@ -152,7 +149,7 @@ const Search = () => {
       ) : null}
 
       <button onClick={handleResearch} className="mx-auto Button">
-        Rechercher ({annonces.length} résultats)
+        Rechercher
       </button>
     </div>
   );

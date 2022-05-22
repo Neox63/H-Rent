@@ -38,7 +38,11 @@ const CreateAnnonce = () => {
       : null
   );
 
-  const { data: typesLogement } = useSWR("/typeLogements");
+  const { data: typesLogement } = useSWR("/typeLogements", {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,7 +67,9 @@ const CreateAnnonce = () => {
     formData.append("arrivalTime", arrivalHour + ":00");
     formData.append("departureTime", departureHour + ":00");
     formData.append("telephoneNumber", phoneNumber);
-    formData.append("files", ...Array.from(images));
+    [...images].forEach((image) => {
+      formData.append("files", image);
+    });
 
     axios
       .post("http://localhost:8080/api/announce/create", formData, {
@@ -85,7 +91,7 @@ const CreateAnnonce = () => {
       <div className="my-8 text-2xl font-extrabold text-center">Déposer une annonce</div>
       <div>
         <form onSubmit={handleSubmit} encType="multipart/form-data">
-          <div className="flex flex-col w-2/3 gap-8 mx-auto">
+          <div className="flex flex-col w-full gap-8 mx-auto md:w-2/3">
             <div className="flex flex-col px-4 py-2 bg-white rounded-lg shadow-md custom-shadow">
               <span className="text-lg font-bold">Commençons par un titre !</span>
               <input
@@ -136,6 +142,7 @@ const CreateAnnonce = () => {
                   setStartDate(start);
                   setEndDate(end);
                 }}
+                minDate={new Date()}
                 startDate={startDate}
                 endDate={endDate}
                 selectsRange
@@ -354,15 +361,16 @@ const CreateAnnonce = () => {
                   name="location"
                   id="location"
                   placeholder="Ville"
+                  autoComplete="off"
                   value={country}
                   onChange={(e) => {
                     setCountry(e.target.value);
                     setQuery(e.target.value);
                   }}
-                  className="relative w-1/2 px-4 py-2 bg-gray-100 border rounded-lg"
+                  className="relative w-2/3 px-4 py-2 bg-gray-100 border rounded-lg"
                 />
                 <ul
-                  className={`absolute w-1/2 overflow-hidden bg-white rounded-md shadow-xl top-full`}
+                  className={`absolute w-2/3 overflow-hidden bg-white rounded-md shadow-xl top-full`}
                 >
                   {isValidating ? (
                     <li className="py-4 text-2xl text-center text-red-500">
@@ -426,7 +434,7 @@ const CreateAnnonce = () => {
               <span className="mb-8 text-lg font-bold">Contact de l'hôte</span>
               <input
                 type="text"
-                className="w-1/3 p-2 bg-gray-100 border rounded-md"
+                className="w-1/2 p-2 bg-gray-100 border rounded-md"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 placeholder="Votre numéro de téléphone"

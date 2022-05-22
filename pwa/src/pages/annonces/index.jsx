@@ -8,8 +8,6 @@ import { useLocation } from "react-router-dom";
 const Annonces = () => {
   const { search } = useLocation();
 
-  console.log(search);
-
   const { data: initialData, error } = useSWR(
     `${search.length > 1 ? `/announce/${search ? search : ""}` : "/announces"}`
   );

@@ -24,7 +24,7 @@ const Home = () => {
         <div className="mb-4 text-xl font-extrabold text-center">
           Le top des destinations, c'est par ici !
         </div>
-        <ul className="flex justify-center flex-grow gap-4">
+        <ul className="flex justify-start flex-grow w-full gap-4 overflow-scroll xl:justify-center">
           <li>
             <Destination
               title="Paris"

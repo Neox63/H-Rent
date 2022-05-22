@@ -5,29 +5,43 @@ const Navbar = () => {
     <>
       <nav className="flex items-center justify-between w-full h-20 px-6 bg-white shadow-lg">
         <Link to="/">
-          <div className="text-4xl Navbar-logo">H-Rent</div>
+          <div className="text-2xl md:text-4xl Navbar-logo">H-Rent</div>
         </Link>
-        <div className="flex">
-          <ul className="flex px-4 font-bold">
-            <li className="mx-4">
-              <Link className="Button" to={"/create"}>
-                Poster une annonce
-              </Link>
-            </li>
 
-            <li className="mx-4">
-              <Link className="hover:text-green-700" to={"/reservation-request"}>
-                Demande de réservation
-              </Link>
-            </li>
+        <ul className="flex gap-4 px-4 font-bold md:gap-8">
+          <li>
+            <Link
+              className="block text-sm text-center md:text-base Button"
+              to={"/create"}
+            >
+              Poster une annonce
+            </Link>
+          </li>
 
-            <li className="mx-4">
-              <Link className="hover:text-green-700" to={"/favoris"}>
+          <li>
+            <Link
+              className="text-sm text-center md:text-base hover:text-green-700"
+              to={"/reservations"}
+            >
+              Mes réservations
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              className="text-sm text-center md:text-base hover:text-green-700"
+              to={"/reservation-request"}
+            >
+              Demande de réservation
+            </Link>
+          </li>
+
+          {/* <li>
+              <Link className="text-sm text-center md:text-base hover:text-green-700" to={"/favoris"}>
                 Favoris
               </Link>
-            </li>
-          </ul>
-        </div>
+            </li> */}
+        </ul>
       </nav>
     </>
   );
