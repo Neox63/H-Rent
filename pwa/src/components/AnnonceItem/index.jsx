@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import useSWR from "swr";
+import { API_BASE_URL } from "../../utils/constant";
 
 const AnnonceItem = ({ initialData }) => {
   const { data: typeLogement } = useSWR(
@@ -14,7 +15,7 @@ const AnnonceItem = ({ initialData }) => {
   return (
     <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">
       <img
-        src={`http://localhost:8080/downloadFile/${encodeURI(
+        src={`${API_BASE_URL}/downloadFile/${encodeURI(
           initialData.locationPrimaryPicture
         )}`}
         alt="Visuel de l'nnonce"

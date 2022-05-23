@@ -6,6 +6,7 @@ import Separator from "../../../components/Separator";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertDateToAPIFormat, getDaysBetween } from "../../../utils/date";
 import useSWR from "swr";
+import { API_BASE_URL } from "../../../utils/constant";
 
 const ReservationModal = ({
   currentAnnonce,
@@ -23,7 +24,7 @@ const ReservationModal = ({
   const history = useHistory();
 
   /* const { data: reservedDates } = useSWR(
-    `http://localhost:8080/api/reservation/getAccepted/${idAnnonce}`
+    `/reservation/getAccepted/${idAnnonce}`
   ); */
 
   const onChange = (dates) => {
@@ -42,7 +43,7 @@ const ReservationModal = ({
     formData.append("isAccepted", 3);
 
     axios
-      .post("http://localhost:8080/api/reservation/create", formData)
+      .post(`${API_BASE_URL}/api/reservation/create`, formData)
       .then((res) => {
         console.log(res.status);
         res.status === 200 && history.push("/reservations");

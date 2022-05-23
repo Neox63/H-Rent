@@ -3,26 +3,20 @@ import useSWR from "swr";
 import { convertDateToAPIFormat } from "../../utils/date";
 
 const Request = ({ request, onAccept, onDecline }) => {
-  const { data: relatedAnnonce } = useSWR(
-    `http://localhost:8080/api/announce/${request.idAnnounce}`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data: relatedAnnonce } = useSWR(`/api/announce/${request.idAnnounce}`, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
-  const { data: relatedUser } = useSWR(
-    `http://localhost:8080/api/user/${request.idUser}`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data: relatedUser } = useSWR(`/api/user/${request.idUser}`, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   /* const { data: relatedDocuments } = useSWR(
-    `http://localhost:8080/api/document/getByUser/${request.idUser}`,
+    `/api/document/getByUser/${request.idUser}`,
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,

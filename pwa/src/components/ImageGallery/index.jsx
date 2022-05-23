@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "../../utils/constant";
+
 const ImageGallery = ({ images, withUrl }) => {
   return (
     <div className="flex w-full gap-4 mt-8">
@@ -8,7 +10,7 @@ const ImageGallery = ({ images, withUrl }) => {
               <img
                 src={
                   withUrl
-                    ? "http://localhost:8080/downloadFile/" + encodeURI(image)
+                    ? `${API_BASE_URL}downloadFile/${encodeURI(image)}`
                     : URL.createObjectURL(image)
                 }
                 alt="Annonce"

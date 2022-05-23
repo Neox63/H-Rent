@@ -7,6 +7,7 @@ import ImageGallery from "../../components/ImageGallery";
 import Separator from "../../components/Separator";
 import { convertDateToAPIFormat } from "../../utils/date";
 import axios from "axios";
+import { API_BASE_URL } from "../../utils/constant";
 
 const CreateAnnonce = () => {
   const [title, setTitle] = useState("");
@@ -72,7 +73,7 @@ const CreateAnnonce = () => {
     });
 
     axios
-      .post("http://localhost:8080/api/announce/create", formData, {
+      .post(`${API_BASE_URL}/api/announce/create`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then((res) => {
