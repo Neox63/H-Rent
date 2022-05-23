@@ -7,21 +7,18 @@ import { useUser } from "../../providers/user";
 const Requests = () => {
   const { user } = useUser();
 
-  const { data, error } = useSWR(
-    `http://localhost:8080/api/reservation/getAwaitingByUser/${user.id}`,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data, error } = useSWR(`/api/reservation/getAwaitingByUser/${user.id}`, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   const acceptRequest = (requestId) => {
-    axios.put(`http://localhost:8080/api/reservation/accept/${requestId}`);
+    axios.put(`/api/reservation/accept/${requestId}`);
   };
 
   const declineRequest = (requestId) => {
-    axios.put(`http://localhost:8080/api/reservation/decline/${requestId}`);
+    axios.put(`/api/reservation/decline/${requestId}`);
   };
 
   return (

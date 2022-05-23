@@ -10,7 +10,7 @@ import { API_BASE_URL } from "./utils/constant";
 
 const App = () => {
   return (
-    <APIProvider api={/* API_BASE_URL ||  */ "http://localhost:8080/api"}>
+    <APIProvider api={API_BASE_URL + "/api"}>
       <UserProvider>
         <Router>
           <Switch>
