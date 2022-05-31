@@ -7,7 +7,7 @@ const Reservations = () => {
   const { user } = useUser();
 
   const { data: reservations, error } = useSWR(
-    user ? `/api/reservation/getByUser/${user.id}` : null,
+    user ? `/reservation/getByUser/${user.id}` : null,
     {
       revalidateIfStale: false,
       revalidateOnFocus: false,

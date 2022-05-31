@@ -8,7 +8,7 @@ const Navbar = () => {
           <div className="text-2xl md:text-4xl Navbar-logo">H-Rent</div>
         </Link>
 
-        <ul className="flex gap-4 px-4 font-bold md:gap-8">
+        <ul className="flex items-center gap-4 px-4 font-bold md:gap-8">
           <li>
             <Link
               className="block text-sm text-center md:text-base Button"

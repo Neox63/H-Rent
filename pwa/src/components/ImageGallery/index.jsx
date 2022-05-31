@@ -10,7 +10,7 @@ const ImageGallery = ({ images, withUrl }) => {
               <img
                 src={
                   withUrl
-                    ? `${API_BASE_URL}downloadFile/${encodeURI(image)}`
+                    ? `${API_BASE_URL}/downloadFile/${encodeURI(image)}`
                     : URL.createObjectURL(image)
                 }
                 alt="Annonce"

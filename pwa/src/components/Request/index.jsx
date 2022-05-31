@@ -3,13 +3,13 @@ import useSWR from "swr";
 import { convertDateToAPIFormat } from "../../utils/date";
 
 const Request = ({ request, onAccept, onDecline }) => {
-  const { data: relatedAnnonce } = useSWR(`/api/announce/${request.idAnnounce}`, {
+  const { data: relatedAnnonce } = useSWR(`/announce/${request.idAnnounce}`, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
 
-  const { data: relatedUser } = useSWR(`/api/user/${request.idUser}`, {
+  const { data: relatedUser } = useSWR(`/user/${request.idUser}`, {
     revalidateIfStale: false,
     revalidateOnFocus: false,
     revalidateOnReconnect: false,

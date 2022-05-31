@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useHistory } from "react-router-dom";
 import useSWR from "swr";
+import DatePicker from "react-datepicker";
+
+import "react-datepicker/dist/react-datepicker.css";
+import { convertDateToAPIFormat } from "../../utils/date";
+import Separator from "../Separator";
 
 const Search = () => {
   const [title, setTitle] = useState("");
@@ -10,6 +15,8 @@ const Search = () => {
   const [capacityFilter, setCapacityFilter] = useState("1");
   const [minPriceFilter, setMinPriceFilter] = useState("");
   const [maxPriceFilter, setMaxPriceFilter] = useState("");
+  const [startDateFilter, setStartDateFilter] = useState(null);
+  const [endDateFilter, setEndDateFilter] = useState(null);
 
   const [displayFilters, setDisplayFilters] = useState(false);
 
@@ -22,6 +29,11 @@ const Search = () => {
     maxPriceFilter && urlParams.append("maxPrice", maxPriceFilter);
     minPriceFilter && urlParams.append("minPrice", minPriceFilter);
     capacityFilter !== "1" && urlParams.append("capacity", capacityFilter);
+
+    if (startDateFilter && endDateFilter) {
+      urlParams.append("startDate", convertDateToAPIFormat(startDateFilter));
+      urlParams.append("endDate", convertDateToAPIFormat(endDateFilter));
+    }
 
     history.push({
       pathname: "/annonces",
@@ -114,9 +126,11 @@ const Search = () => {
         {displayFilters ? "Cacher" : "Afficher"} les filtres
       </button>
       {displayFilters ? (
-        <div className="flex flex-col items-center justify-center gap-4 mb-8 filters">
+        <div className="flex flex-col items-center justify-center gap-8 mb-8 filters">
           <div className="flex flex-col items-center justify-center">
-            <label htmlFor="capacity">Capacité</label>
+            <label htmlFor="capacity" className="text-lg font-bold">
+              Capacité du logement
+            </label>
             <input
               name="capacity"
               id="capacity"
@@ -143,6 +157,29 @@ const Search = () => {
               placeholder="Prix maximum"
               value={maxPriceFilter}
               onChange={(e) => setMaxPriceFilter(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center justify-center w-4/5 gap-4">
+            <span className="text-lg font-bold">Du</span>
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              selected={startDateFilter}
+              onChange={(date) => setStartDateFilter(date)}
+              className="w-full px-4 py-2 bg-gray-100 rounded-lg"
+              isClearable
+              placeholderText="Choissisez une date de début"
+            />
+
+            <span className="text-lg font-bold">au</span>
+
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              selected={endDateFilter}
+              onChange={(date) => setEndDateFilter(date)}
+              className="w-full px-4 py-2 bg-gray-100 rounded-lg"
+              isClearable
+              placeholderText="Choissisez une date de fin"
             />
           </div>
         </div>

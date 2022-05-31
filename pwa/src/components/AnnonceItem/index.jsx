@@ -3,14 +3,11 @@ import useSWR from "swr";
 import { API_BASE_URL } from "../../utils/constant";
 
 const AnnonceItem = ({ initialData }) => {
-  const { data: typeLogement } = useSWR(
-    initialData ? `/typeLogement/${initialData.idTypeLogement}` : null,
-    {
-      revalidateIfStale: false,
-      revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-    }
-  );
+  const { data: typeLogement } = useSWR(`/typeLogement/${initialData.idTypeLogement}`, {
+    revalidateIfStale: false,
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
 
   return (
     <div className="flex flex-col my-8 overflow-hidden border-2 border-black rounded-lg shadow-xl md:p-2 md:h-64 md:flex-row">

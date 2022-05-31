@@ -1,7 +1,6 @@
 import { parse, stringify } from "qs";
 import { useEffect, useMemo } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-
 import { cloneDeep } from "lodash-es";
 
 export function useRouterQuery(returnToTop = false) {
@@ -32,9 +31,7 @@ export function useRouterQuery(returnToTop = false) {
     return newUrl;
   };
 
-  const resetParams = () => {
-    return history.push(pathname);
-  };
+  const resetParams = () => history.push(pathname);
 
   useEffect(() => {
     if (returnToTop) {
