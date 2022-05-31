@@ -5,7 +5,6 @@ import axios from "axios";
 import Separator from "../../../components/Separator";
 import "react-datepicker/dist/react-datepicker.css";
 import { convertDateToAPIFormat, getDaysBetween } from "../../../utils/date";
-import useSWR from "swr";
 import { API_BASE_URL } from "../../../utils/constant";
 
 const ReservationModal = ({
@@ -76,7 +75,7 @@ const ReservationModal = ({
 
             <div className="flex flex-col gap-2 my-8">
               {currentAnnonce.idCardRequired && (
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
                   <label className="font-bold text-left" htmlFor="cni-upload">
                     Carte d'identité :{" "}
                   </label>
@@ -92,7 +91,7 @@ const ReservationModal = ({
               )}
 
               {currentAnnonce.isProofOfAddressRequired && (
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
                   <label className="font-bold text-left" htmlFor="justificatif-upload">
                     Justificatif de domicile :{" "}
                   </label>

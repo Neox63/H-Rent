@@ -5,10 +5,7 @@ function PrivateRoute({ children, ...rest }) {
   const { isLogged } = useUser();
 
   return (
-    <Route
-      {...rest}
-      render={() => (isLogged ? children : <Redirect to={"/login"} />)}
-    />
+    <Route {...rest} render={() => (isLogged ? children : <Redirect to={"/login"} />)} />
   );
 }
 

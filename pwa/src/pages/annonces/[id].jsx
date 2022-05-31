@@ -34,6 +34,12 @@ const Annonce = () => {
     }
   );
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+    });
+  }, []);
+
   if (!error && !currentAnnonce) {
     return (
       <div className="flex items-center justify-center p-60">
